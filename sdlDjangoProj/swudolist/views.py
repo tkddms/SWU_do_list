@@ -1,4 +1,6 @@
+from django.contrib import auth
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -44,18 +46,18 @@ def user(request, pk):
         obj.delete()
         return HttpResponse(status=204)
 
-@csrf_exempt
-# 로그인 - 웹 -> TEST (정상 작동)
-def login(request):
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        target_id = data['user_id']
-        obj = Users.objects.get(user_id=target_id)
-
-        if data['user_name'] == obj.user_name:
-            return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=400)
+# @csrf_exempt
+# # 로그인 - 웹 -> TEST (정상 작동)
+# def login(request):
+#     if request.method == 'POST':
+#         data = JSONParser().parse(request)
+#         target_id = data['user_id']
+#         obj = Users.objects.get(user_id=target_id)
+#
+#         if data['user_name'] == obj.user_name:
+#             return HttpResponse(status=200)
+#         else:
+#             return HttpResponse(status=400)
 
 @csrf_exempt
 # 로그인 - 앱
@@ -66,7 +68,9 @@ def app_login(request):
         pw = request.POST.get('user_pw', '')
         print("id = " + id + " pw = " + pw)
 
-        result = authenticate(user_id=id, user_pw=pw)
+        result = authenticate(username=id, password=pw)
+
+        print(result)
 
         if result:
             print("successed")
@@ -75,3 +79,22 @@ def app_login(request):
             print("fail")
             # status=400 으로 하면 안드로이드 상에서 배제해버려서 결과가 나오지 않음.
             return JsonResponse({'code': '1001', 'msg': 'login failed'}, status=200)
+
+
+def app_sign_up(request):
+    if request.method == 'POST':
+        print("리퀘스트 로그(sign_up): " + str(request.body))
+        id = request.POST.get('user_r_id', '')
+        pw = request.POST.get('user_r_pw', '')
+        email = request.POST.get('user_r_email', '')
+
+        user = User.objects.create_user(id, email, pw)
+        result = authenticate(username=id, password=pw)
+
+        if result:
+            print("successed signin")
+            auth.login(user)
+            return JsonResponse({'code': '0000', 'msg': 'signin success!'}, status=200)
+        else:
+            # status=400 으로 하면 안드로이드 상에서 배제해버려서 결과가 나오지 않음.
+            return JsonResponse({'code': '1001', 'msg': 'signin failed'}, status=200)

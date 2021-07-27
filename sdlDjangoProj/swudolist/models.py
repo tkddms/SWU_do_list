@@ -7,7 +7,7 @@ class Users(models.Model):
     user_name = models.CharField(max_length=10, unique=True)
     user_id = models.CharField(max_length=32, unique=True)
     user_pw = models.CharField(max_length=128)
-    uesr_email = models.CharField(max_length=128)
+    user_email = models.CharField(max_length=128)
     user_created = models.DateTimeField(auto_now_add=True)
     user_subjects = models.TextField(null=True)             # textfield로 받은 후 json에서 리스트로 처리하고 할 예정
 
