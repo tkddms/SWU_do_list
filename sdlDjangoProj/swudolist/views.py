@@ -80,8 +80,8 @@ def app_login(request):
             # status=400 으로 하면 안드로이드 상에서 배제해버려서 결과가 나오지 않음.
             return JsonResponse({'code': '1001', 'msg': 'login failed'}, status=200)
 
-
-def app_sign_up(request):
+@csrf_exempt
+def app_register(request):
     if request.method == 'POST':
         print("리퀘스트 로그(sign_up): " + str(request.body))
         id = request.POST.get('user_r_id', '')
@@ -93,7 +93,7 @@ def app_sign_up(request):
 
         if result:
             print("successed signin")
-            auth.login(user)
+            auth.login(request, user)
             return JsonResponse({'code': '0000', 'msg': 'signin success!'}, status=200)
         else:
             # status=400 으로 하면 안드로이드 상에서 배제해버려서 결과가 나오지 않음.

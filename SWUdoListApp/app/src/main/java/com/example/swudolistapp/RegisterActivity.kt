@@ -3,7 +3,9 @@ package com.example.swudolistapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_register.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,6 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RegisterActivity : AppCompatActivity() {
 
     var isOk: Boolean = true
+    var register: Register? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,15 +40,27 @@ class RegisterActivity : AppCompatActivity() {
             var reg_pw = et_register_pw.text.toString()
             var reg_email = et_register_email.text.toString()
 
+
+
             if(isOk){
                 // 회원가입 가능 조건 충족 시 - 회원가입
                 registerService.requestRegister(reg_id, reg_pw, reg_email).enqueue(object: Callback<Register>{
                     override fun onFailure(call: Call<Register>, t: Throwable) {
-                        TODO("Not yet implemented")
+                        Log.e("SIGNIN" , t.message)
+                        var dialog = AlertDialog.Builder(this@RegisterActivity)
+                        dialog.setTitle("에러")
+                        dialog.setMessage("호출실패했습니다.")
+                        dialog.show()
                     }
 
                     override fun onResponse(call: Call<Register>, response: Response<Register>) {
-                        TODO("Not yet implemented")
+                        register = response.body()
+                        Log.d("SIGNIN", "msg: " + register?.msg)
+                        Log.d("SIGNIN", "msg: " + register?.code)
+                        var dialog = AlertDialog.Builder(this@RegisterActivity)
+                        dialog.setTitle(register?.msg)
+                        dialog.setMessage(register?.code)
+                        dialog.show()
                     }
                 })
 
@@ -78,7 +93,8 @@ class RegisterActivity : AppCompatActivity() {
             et_register_email.setError("이메일 입력 란은 필수로 입력하셔야 합니다.")
             isOk = false
         }
-        if (et_register_pw.text.toString().equals(et_register_pw_confirm.text.toString())){
+
+        if (!(et_register_pw.text.toString().equals(et_register_pw_confirm.text.toString()))){
             // pw != pw_confirm
             et_register_pw_confirm.setError("입력한 비밀번호와 비밀번호 확인이 일치하지 않습니다.")
             isOk = false
