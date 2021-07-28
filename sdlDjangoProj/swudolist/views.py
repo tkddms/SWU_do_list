@@ -1,9 +1,8 @@
-import self as self
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
+# from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from .models import sdiUser
@@ -29,7 +28,7 @@ def users_list(request):
 @csrf_exempt
 # 유저 객체 수정, 삭제, 조회
 def user(request, pk):
-    obj = Users.objects.get(pk=pk)
+    obj = User.objects.get(pk=pk)
 
     if request.method == 'GET':
         serializer = UserSerializer(obj)
