@@ -7,9 +7,7 @@ from django.contrib.auth.models import User
 # 유저 모델 - 아이디, 비밀번호, 닉네임
 class sdiUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    user_subjects = models.TextField(null=True)             # textfield로 받은 후 json에서 리스트로 처리하고 할 예정
-    def __str__(self):
-        return self.username
+    user_subjects = models.CharField(max_length=128, null=True)             # textfield로 받은 후 json에서 리스트로 처리하고 할 예정
 
 # Board Model - 게시글 - 과목 코드, 글 제목, 글 내용
 class Post(models.Model):

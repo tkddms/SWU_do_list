@@ -87,6 +87,7 @@ def app_register(request):
         id = request.POST.get('user_r_id', '')
         pw = request.POST.get('user_r_pw', '')
         email = request.POST.get('user_r_email', '')
+        subject = request.POST.get('user_tot_subject', '')
 
         user = User.objects.create_user(id, email, pw)
 
@@ -97,8 +98,8 @@ def app_register(request):
         except: # # 조회 결과가 없다. 등록되지 않은 email
             pass
 
-        # Users DB에 저장
-        users_m = sdiUser(user_id=id)
+        # Users DB에 저장 - 여기서 뭔가 오류가 있다 (ValueError: id가 int형이라고 한다,, 뭐지)
+        users_m = sdiUser(id=id, user_subjects=subject)
         users_m.save()
         
         result = authenticate(username=id, password=pw)

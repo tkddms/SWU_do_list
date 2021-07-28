@@ -7,10 +7,23 @@
     tools:context=".RegisterActivity">
 
     <EditText
+        android:id="@+id/et_register_pw_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="비밀번호 확인"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/et_register_pw"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/et_register_pw"
+        app:layout_constraintTop_toBottomOf="@+id/et_register_pw" />
+
+    <EditText
         android:id="@+id/et_register_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="76dp"
         android:ems="10"
         android:hint="이메일"
         android:inputType="textEmailAddress"
@@ -32,18 +45,16 @@
         app:layout_constraintStart_toStartOf="@+id/et_register_email"
         app:layout_constraintTop_toBottomOf="@+id/et_register_email" />
 
-    <EditText
-        android:id="@+id/et_register_pw_confirm"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="비밀번호 확인"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/et_register_pw"
+        android:layout_marginTop="56dp"
+        android:text="회원가입"
+        app:layout_constraintEnd_toEndOf="@+id/btn_select_subject"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/et_register_pw"
-        app:layout_constraintTop_toBottomOf="@+id/et_register_pw" />
+        app:layout_constraintStart_toStartOf="@+id/btn_select_subject"
+        app:layout_constraintTop_toBottomOf="@+id/btn_select_subject" />
 
     <EditText
         android:id="@+id/et_register_pw"
@@ -58,12 +69,12 @@
         app:layout_constraintStart_toStartOf="@+id/et_register_id"
         app:layout_constraintTop_toBottomOf="@+id/et_register_id" />
 
-    <Button
-        android:id="@+id/btn_register"
+    <android.widget.Button
+        android:id="@+id/btn_select_subject"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="회원가입"
+        android:layout_marginTop="16dp"
+        android:text="과목 선택"
         app:layout_constraintEnd_toEndOf="@+id/et_register_pw_confirm"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/et_register_pw_confirm"

@@ -22,6 +22,7 @@ interface RegisterService{
     fun requestRegister(
             @Field("user_r_id") user_r_id: String,
             @Field("user_r_pw") user_r_pw: String,
-            @Field("user_r_email") user_r_email:String,
+            @Field("user_r_email") user_r_email: String,
+            @Field("user_tot_subject") user_tot_subject: String,
     ): Call<Register>
 }

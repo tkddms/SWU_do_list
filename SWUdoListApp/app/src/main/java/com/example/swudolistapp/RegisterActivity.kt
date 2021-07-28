@@ -1,5 +1,6 @@
 package com.example.swudolistapp
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -32,6 +33,45 @@ class RegisterActivity : AppCompatActivity() {
 
         var registerService: RegisterService = retrofit.create(RegisterService::class.java)
 
+        var subjectArr = arrayOf("JAVA프로그래밍기초", "C++프로그래밍기초", "자료구조")
+        var subjectStr = ""
+
+        // 과목 선택 팝업 창
+        btn_select_subject.setOnClickListener {
+            var selectItems = ArrayList<Int>()
+            var builder = AlertDialog.Builder(this)
+            builder.setTitle("과목 선택")
+            builder.setMultiChoiceItems(
+                subjectArr,
+                null,
+                object: DialogInterface.OnMultiChoiceClickListener{
+                    override fun onClick(dialog: DialogInterface?, which: Int, isChecked: Boolean) {
+                        if(isChecked){
+                            selectItems.contains(which)
+                        }
+                        else if(selectItems.contains(which)){
+                            selectItems.remove(which)
+                        }
+                    }
+                }
+            )
+
+//             여기 부분 이상하다 - 반응이 없어..
+            var listener = object : DialogInterface.OnClickListener{
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    for(item in selectItems){
+                        print(item)
+                        subjectStr += subjectArr[item] + " "
+                    }
+                    Log.d("subject List", subjectStr)
+                }
+            }
+
+            builder.setPositiveButton("확인", listener)
+            builder.setNegativeButton("취소", null)
+            builder.show()
+        }
+
         btn_register.setOnClickListener{
             // 넘어갈 수 있도록 조건 검사
             canSubmitForm()
@@ -42,7 +82,7 @@ class RegisterActivity : AppCompatActivity() {
 
             if(isOk){
                 // 회원가입 가능 조건 충족 시 - 회원가입
-                registerService.requestRegister(reg_id, reg_pw, reg_email).enqueue(object: Callback<Register>{
+                registerService.requestRegister(reg_id, reg_pw, reg_email, subjectStr).enqueue(object: Callback<Register>{
                     override fun onFailure(call: Call<Register>, t: Throwable) {
                         Log.e("SIGNIN" , t.message)
                         var dialog = AlertDialog.Builder(this@RegisterActivity)
@@ -67,7 +107,6 @@ class RegisterActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-
     }
 
     private fun canSubmitForm(){
