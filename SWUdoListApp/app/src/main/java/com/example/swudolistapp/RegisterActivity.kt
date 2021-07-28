@@ -40,8 +40,6 @@ class RegisterActivity : AppCompatActivity() {
             var reg_pw = et_register_pw.text.toString()
             var reg_email = et_register_email.text.toString()
 
-
-
             if(isOk){
                 // 회원가입 가능 조건 충족 시 - 회원가입
                 registerService.requestRegister(reg_id, reg_pw, reg_email).enqueue(object: Callback<Register>{

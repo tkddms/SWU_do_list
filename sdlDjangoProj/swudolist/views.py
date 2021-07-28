@@ -1,3 +1,4 @@
+import self as self
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -5,7 +6,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from .models import Users
+from .models import sdiUser
 from .serializers import UserSerializer
 # Create your views here.
 
@@ -13,7 +14,7 @@ from .serializers import UserSerializer
 def users_list(request):
    #  Users 리스트 조회
    if request.method == 'GET':
-       query_set = Users.objects.all()
+       query_set = User.objects.all()
        serializer = UserSerializer(query_set, many=True)
        return JsonResponse(serializer.data, safe=False)
    # Users 객체 생성
@@ -89,6 +90,18 @@ def app_register(request):
         email = request.POST.get('user_r_email', '')
 
         user = User.objects.create_user(id, email, pw)
+
+        # id 중복 확인
+        try:
+            User.objects.get(pk=id)
+            return JsonResponse({'code': '1001', 'msg': 'already created id'}, status=200)
+        except: # # 조회 결과가 없다. 등록되지 않은 email
+            pass
+
+        # Users DB에 저장
+        users_m = sdiUser(user_id=id)
+        users_m.save()
+        
         result = authenticate(username=id, password=pw)
 
         if result:
