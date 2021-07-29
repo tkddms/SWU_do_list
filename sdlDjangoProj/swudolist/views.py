@@ -89,18 +89,19 @@ def app_register(request):
         email = request.POST.get('user_r_email', '')
         subject = request.POST.get('user_tot_subject', '')
 
-        user = User.objects.create_user(id, email, pw)
-
         # id 중복 확인
         try:
-            User.objects.get(pk=id)
+            User.objects.get(username=id)
             return JsonResponse({'code': '1001', 'msg': 'already created id'}, status=200)
-        except: # # 조회 결과가 없다. 등록되지 않은 email
+        except:  # 조회 결과가 없다. 등록되지 않은 email - ??
             pass
 
-        # Users DB에 저장 - 여기서 뭔가 오류가 있다 (ValueError: id가 int형이라고 한다,, 뭐지)
-        users_m = sdiUser(id=id, user_subjects=subject)
-        users_m.save()
+        user = User.objects.create_user(username=id, email=email, password=pw)
+
+
+        sdiuser = sdiUser(user=user, user_subjects=subject)
+        # users_m = sdiUser.objects.create_user(username=id, user_subjects=subject)
+        sdiuser.save()
         
         result = authenticate(username=id, password=pw)
 

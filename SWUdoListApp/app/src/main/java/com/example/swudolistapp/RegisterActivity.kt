@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_register.*
 import retrofit2.Call
@@ -21,6 +22,9 @@ class RegisterActivity : AppCompatActivity() {
 
     var isOk: Boolean = true
     var register: Register? = null
+    var subjectStr = ""
+    var subjectArr = arrayOf("JAVA프로그래밍기초", "C++프로그래밍기초", "자료구조")
+    var subjectCode = arrayOf("MT01044", "MT01043" ,"MT01019")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +37,9 @@ class RegisterActivity : AppCompatActivity() {
 
         var registerService: RegisterService = retrofit.create(RegisterService::class.java)
 
-        var subjectArr = arrayOf("JAVA프로그래밍기초", "C++프로그래밍기초", "자료구조")
-        var subjectStr = ""
-
         // 과목 선택 팝업 창
         btn_select_subject.setOnClickListener {
-            var selectItems = ArrayList<Int>()
+            var selectItems = ArrayList<String>()
             var builder = AlertDialog.Builder(this)
             builder.setTitle("과목 선택")
             builder.setMultiChoiceItems(
@@ -47,23 +48,22 @@ class RegisterActivity : AppCompatActivity() {
                 object: DialogInterface.OnMultiChoiceClickListener{
                     override fun onClick(dialog: DialogInterface?, which: Int, isChecked: Boolean) {
                         if(isChecked){
-                            selectItems.contains(which)
+                            selectItems.add(subjectCode[which])
                         }
-                        else if(selectItems.contains(which)){
-                            selectItems.remove(which)
+                        else if(selectItems.contains(subjectCode[which])){
+                            selectItems.remove(subjectCode[which])
                         }
                     }
                 }
             )
 
-//             여기 부분 이상하다 - 반응이 없어..
             var listener = object : DialogInterface.OnClickListener{
                 override fun onClick(dialog: DialogInterface?, which: Int) {
                     for(item in selectItems){
                         print(item)
-                        subjectStr += subjectArr[item] + " "
+                        subjectStr += item + " "
                     }
-                    Log.d("subject List", subjectStr)
+                    Log.e("subject List", subjectStr)
                 }
             }
 
@@ -72,6 +72,7 @@ class RegisterActivity : AppCompatActivity() {
             builder.show()
         }
 
+//        회원가입 실행
         btn_register.setOnClickListener{
             // 넘어갈 수 있도록 조건 검사
             canSubmitForm()
@@ -134,6 +135,12 @@ class RegisterActivity : AppCompatActivity() {
         if (!(et_register_pw.text.toString().equals(et_register_pw_confirm.text.toString()))){
             // pw != pw_confirm
             et_register_pw_confirm.setError("입력한 비밀번호와 비밀번호 확인이 일치하지 않습니다.")
+            isOk = false
+        }
+
+        if (subjectStr.equals("")){
+            Log.e("SELECT", subjectStr)
+            btn_select_subject.setError("과목은 1개 이상 선택해야 합니다.")
             isOk = false
         }
     }
