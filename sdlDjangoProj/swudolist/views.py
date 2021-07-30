@@ -98,7 +98,6 @@ def app_register(request):
 
         user = User.objects.create_user(username=id, email=email, password=pw)
 
-
         sdiuser = sdiUser(user=user, user_subjects=subject)
         # users_m = sdiUser.objects.create_user(username=id, user_subjects=subject)
         sdiuser.save()

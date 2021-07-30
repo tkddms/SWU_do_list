@@ -25,6 +25,8 @@ class RegisterActivity : AppCompatActivity() {
     var subjectStr = ""
     var subjectArr = arrayOf("JAVA프로그래밍기초", "C++프로그래밍기초", "자료구조")
     var subjectCode = arrayOf("MT01044", "MT01043" ,"MT01019")
+//    선택한 과목 코드 저장
+    var selectItems = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +41,6 @@ class RegisterActivity : AppCompatActivity() {
 
         // 과목 선택 팝업 창
         btn_select_subject.setOnClickListener {
-            var selectItems = ArrayList<String>()
             var builder = AlertDialog.Builder(this)
             builder.setTitle("과목 선택")
             builder.setMultiChoiceItems(
@@ -96,6 +97,7 @@ class RegisterActivity : AppCompatActivity() {
                         register = response.body()
                         Log.d("SIGNIN", "msg: " + register?.msg)
                         Log.d("SIGNIN", "msg: " + register?.code)
+
                         var dialog = AlertDialog.Builder(this@RegisterActivity)
                         dialog.setTitle(register?.msg)
                         dialog.setMessage(register?.code)
@@ -104,7 +106,8 @@ class RegisterActivity : AppCompatActivity() {
                 })
 
                 // 메인 화면으로 이동 - 이후 선택 화면으로 이동? 아니면 팝업으로 선택한 후에 이동하도록 할까?
-                val intent = Intent(this@RegisterActivity, MainActivity::class.java)
+                val intent = Intent(this@RegisterActivity, SelectSubjectActivity::class.java)
+                intent.putExtra("selectSubject", selectItems)
                 startActivity(intent)
             }
         }

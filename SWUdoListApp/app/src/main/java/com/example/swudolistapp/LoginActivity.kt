@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
                     dialog.show()
 
                     if(login?.code.equals("0000")){
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        val intent = Intent(this@LoginActivity, SelectSubjectActivity::class.java)
                         startActivity(intent)
                     }
 
