@@ -1,12 +1,10 @@
 package com.example.swudolistapp
 
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,12 +28,15 @@ class LoginActivity : AppCompatActivity() {
                 .build()
 
         var loginService: MyAPI = retrofit.create(MyAPI::class.java)
+        var getInfoService: MyAPI = retrofit.create(MyAPI::class.java)
 
         // 로그인 버튼 클릭 - 로그인
         btn_login.setOnClickListener {
 
             var t_id = et_id.text.toString()
             var t_pw = et_pw.text.toString()
+            var email: String = ""
+            var subjects: String = ""
 
             loginService.requestLogin(t_id, t_pw).enqueue(object : Callback<PostItem> {
                 override fun onFailure(call: Call<PostItem>, t: Throwable) {
@@ -46,12 +47,36 @@ class LoginActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<PostItem>, response: Response<PostItem>) {
 //                로그인 성공
                     login = response.body()
-                    Log.d("Login", "msg: " + login?.msg)
-                    Log.d("Login", "code: " + login?.code)
+                    Log.e("Login", login?.code)
 
                     if(login?.code.equals("0000")){
+                        // subject, email 내용 얻어오기
+                        getInfoService.getUser(t_id).enqueue(object : Callback<GetInfo>{
+                            override fun onFailure(call: Call<GetInfo>, t: Throwable) {
+                                t.printStackTrace()
+                            }
+                            override fun onResponse( call: Call<GetInfo>, response: Response<GetInfo> ) {
+                                var info = response.body()
+                                email = info?.email.toString()
+                                subjects = info?.subjects.toString()
+                                Log.e("email", email)
+                                Log.e("subjects", subjects)
+                            }
+                        })
+                        
+                        // 로그인 정보 저장
+                        val currentUser = User().apply {
+                            id = t_id.trim()
+                            pw = t_pw.trim()
+                            email = email.trim()
+                            subjects = subjects.trim()
+                        }
+                        sharedManager.saveCurrentUser(currentUser)
 
-                        // SharedPreference - 로그인 정보 및 subject 내용까지 얻어와야 함. - GET 필요
+                        Log.e("id", sharedManager.getCurrentUser().id)
+                        Log.e("pw", sharedManager.getCurrentUser().pw)
+                        Log.e("email", sharedManager.getCurrentUser().email)
+                        Log.e("subjects", sharedManager.getCurrentUser().subjects)
 
                         val intent = Intent(this@LoginActivity, SelectSubjectActivity::class.java)
                         startActivity(intent)

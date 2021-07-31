@@ -121,8 +121,8 @@ class SelectSubjectActivity : AppCompatActivity() {
 
                     override fun onResponse(call: Call<PostItem>, response: Response<PostItem>) {
                         var logout = response.body()
-                        Log.d("Login", "msg: " + logout?.msg)
-                        Log.d("Login", "code: " + logout?.code)
+                        Log.d("Logout", "msg: " + logout?.msg)
+                        Log.d("Logout", "code: " + logout?.code)
 
                         // sharedPreference 비우기
                         val currentUser = User().apply {

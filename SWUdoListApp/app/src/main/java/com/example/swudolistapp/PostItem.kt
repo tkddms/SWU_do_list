@@ -8,8 +8,9 @@ data class PostItem (
     val msg: String
 )
 
-data class RequestSubject(
-    val subjects: String
+data class GetInfo(
+    val subjects: String,
+    val email: String,
 )
 
 data class User(

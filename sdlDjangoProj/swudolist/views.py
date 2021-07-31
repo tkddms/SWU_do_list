@@ -52,19 +52,6 @@ def user(request, pk):
         obj.delete()
         return HttpResponse(status=204)
 
-# @csrf_exempt
-# # 로그인 - 웹 -> TEST (정상 작동)
-# def login(request):
-#     if request.method == 'POST':
-#         data = JSONParser().parse(request)
-#         target_id = data['user_id']
-#         obj = Users.objects.get(user_id=target_id)
-#
-#         if data['user_name'] == obj.user_name:
-#             return HttpResponse(status=200)
-#         else:
-#             return HttpResponse(status=400)
-
 @csrf_exempt
 # 로그인 - 앱
 def app_login(request):
@@ -129,7 +116,7 @@ def app_update_subject(request):
             user = sdiUser(user=User.objects.get(username=id))
             user.user_subjects = subject
             print("subject 확인: " + user.user_subjects)
-            return JsonResponse({'code': '0000', 'msg': 'signin success!'}, status=200)
+            return JsonResponse({'code': '0000', 'msg': 'update success!'}, status=200)
         except Exception as e:
             # 해당 id의 User 객체를 불러오지 못했을 때
             print(e)
@@ -140,13 +127,13 @@ def app_logout(request):
     auth.logout(request)
     return JsonResponse({'code': '0000', 'msg': 'logout success'}, status=200)
 
-@csrf_exempt
-def app_get_subject(request):
-    print("app_get_subject " + str(request))
-    if request.method == 'GET':
-        currentUser = sdiUser.objects.get(user=request.user)
-        print("infunc" + currentUser)
-        serializer = UserSubjectSerializer(currentUser)
-        return HttpResponse(status=200)
+def app_get_user(request):
+    put = str(request).split("=")[1]
+    id = put.split("'")[0]
 
-    return HttpResponse(status=200)
+    sdiuser = sdiUser.objects.get(user=User.objects.get(username=id))
+
+    email = sdiuser.user.email
+    subjcets = sdiuser.user_subjects
+
+    return JsonResponse({'subjects': subjcets, 'email': email}, status=200)

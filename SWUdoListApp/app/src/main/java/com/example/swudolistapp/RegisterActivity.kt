@@ -16,8 +16,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-// pw 값이랑 pw_confirm 값이랑 같은지 확인하고 버튼 활성화시키기
-
 class RegisterActivity : AppCompatActivity() {
 
     private val sharedManager: SharedManager by lazy { SharedManager(this) }
@@ -117,6 +115,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    // 회원 가입 폼을 제대로 작성했는지 확인.
     private fun canSubmitForm(){
         if (et_register_id.text.toString().equals("")){
             // id 입력란이 비어 있을 때

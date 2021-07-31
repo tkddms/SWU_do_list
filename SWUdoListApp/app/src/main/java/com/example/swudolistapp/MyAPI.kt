@@ -1,4 +1,4 @@
-package com.example.swudolistapp
+ package com.example.swudolistapp
 
 import retrofit2.Call
 import retrofit2.http.*
@@ -34,9 +34,14 @@ interface MyAPI {
         @Field("user_update_subject") user_update_subject: String,
     ): Call<PostItem>
 
-    @GET("/app_get_subject/")
-    fun getSubjects(
+//    @GET("/app_get_subject/")
+//    fun getSubjects(
 //        @Query("user_subjects") user_subjects: String,
-    ): Call<RequestSubject>
+//    ): Call<RequestSubject>
+
+    @GET("/app_get_user/")
+    fun getUser(
+        @Query("user_id") user_id: String,
+    ): Call<GetInfo>
 
 }
