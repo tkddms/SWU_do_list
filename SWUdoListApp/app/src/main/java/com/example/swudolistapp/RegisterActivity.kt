@@ -20,8 +20,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class RegisterActivity : AppCompatActivity() {
 
+    private val sharedManager: SharedManager by lazy { SharedManager(this) }
+
     var isOk: Boolean = true
-    var register: Register? = null
+    var register: PostItem? = null
     var subjectStr = ""
     var subjectArr = arrayOf("JAVA프로그래밍기초", "C++프로그래밍기초", "자료구조")
     var subjectCode = arrayOf("MT01044", "MT01043" ,"MT01019")
@@ -37,17 +39,20 @@ class RegisterActivity : AppCompatActivity() {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
-        var registerService: RegisterService = retrofit.create(RegisterService::class.java)
+        var registerService: MyAPI = retrofit.create(MyAPI::class.java)
 
         // 과목 선택 팝업 창
         btn_select_subject.setOnClickListener {
+            selectItems.clear()
             var builder = AlertDialog.Builder(this)
             builder.setTitle("과목 선택")
+
             builder.setMultiChoiceItems(
                 subjectArr,
                 null,
                 object: DialogInterface.OnMultiChoiceClickListener{
                     override fun onClick(dialog: DialogInterface?, which: Int, isChecked: Boolean) {
+                        subjectStr = ""
                         if(isChecked){
                             selectItems.add(subjectCode[which])
                         }
@@ -75,39 +80,38 @@ class RegisterActivity : AppCompatActivity() {
 
 //        회원가입 실행
         btn_register.setOnClickListener{
-            // 넘어갈 수 있도록 조건 검사
-            canSubmitForm()
 
             var reg_id = et_register_id.text.toString()
             var reg_pw = et_register_pw.text.toString()
             var reg_email = et_register_email.text.toString()
 
+            // 넘어갈 수 있도록 조건 검사
+            canSubmitForm()
             if(isOk){
                 // 회원가입 가능 조건 충족 시 - 회원가입
-                registerService.requestRegister(reg_id, reg_pw, reg_email, subjectStr).enqueue(object: Callback<Register>{
-                    override fun onFailure(call: Call<Register>, t: Throwable) {
-                        Log.e("SIGNIN" , t.message)
-                        var dialog = AlertDialog.Builder(this@RegisterActivity)
-                        dialog.setTitle("에러")
-                        dialog.setMessage("호출실패했습니다.")
-                        dialog.show()
+                registerService.requestRegister(reg_id, reg_pw, reg_email, subjectStr).enqueue(object: Callback<PostItem>{
+                    override fun onFailure(call: Call<PostItem>, t: Throwable) {
+                        Log.e("SIGNIN - Error" , t.message)
                     }
 
-                    override fun onResponse(call: Call<Register>, response: Response<Register>) {
+                    override fun onResponse(call: Call<PostItem>, response: Response<PostItem>) {
                         register = response.body()
                         Log.d("SIGNIN", "msg: " + register?.msg)
                         Log.d("SIGNIN", "msg: " + register?.code)
-
-                        var dialog = AlertDialog.Builder(this@RegisterActivity)
-                        dialog.setTitle(register?.msg)
-                        dialog.setMessage(register?.code)
-                        dialog.show()
                     }
                 })
 
+                val currentUser = User().apply {
+                    id = reg_id.trim()
+                    pw = reg_pw.trim()
+                    email = reg_email.trim()
+                    subjects = subjectStr.trim()
+                }
+                sharedManager.saveCurrentUser(currentUser)
+
+
                 // 메인 화면으로 이동 - 이후 선택 화면으로 이동? 아니면 팝업으로 선택한 후에 이동하도록 할까?
                 val intent = Intent(this@RegisterActivity, SelectSubjectActivity::class.java)
-                intent.putExtra("selectSubject", selectItems)
                 startActivity(intent)
             }
         }

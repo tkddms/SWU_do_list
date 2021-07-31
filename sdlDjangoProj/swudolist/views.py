@@ -1,12 +1,18 @@
+import json
+import re
+
 from django.contrib import auth
 from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, QueryDict
 # from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from .models import sdiUser
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserSubjectSerializer
+
+
 # Create your views here.
 
 @csrf_exempt
@@ -73,7 +79,8 @@ def app_login(request):
         print(result)
 
         if result:
-            print("successed")
+            auth.login(request, result)
+            print("success login " + str(request.body))
             return JsonResponse({'code': '0000', 'msg': 'login success!'}, status=200)
         else:
             print("fail")
@@ -111,3 +118,35 @@ def app_register(request):
         else:
             # status=400 으로 하면 안드로이드 상에서 배제해버려서 결과가 나오지 않음.
             return JsonResponse({'code': '1001', 'msg': 'signin failed'}, status=200)
+
+@csrf_exempt
+def app_update_subject(request):
+    if request.method == 'PUT':
+        put = QueryDict(request.body)
+        id = put.get("user_update_id")
+        subject = put.get("user_update_subject")
+        try:
+            user = sdiUser(user=User.objects.get(username=id))
+            user.user_subjects = subject
+            print("subject 확인: " + user.user_subjects)
+            return JsonResponse({'code': '0000', 'msg': 'signin success!'}, status=200)
+        except Exception as e:
+            # 해당 id의 User 객체를 불러오지 못했을 때
+            print(e)
+            return JsonResponse({'code': '1001', 'msg': 'not exist user'}, status=200)
+
+@csrf_exempt
+def app_logout(request):
+    auth.logout(request)
+    return JsonResponse({'code': '0000', 'msg': 'logout success'}, status=200)
+
+@csrf_exempt
+def app_get_subject(request):
+    print("app_get_subject " + str(request))
+    if request.method == 'GET':
+        currentUser = sdiUser.objects.get(user=request.user)
+        print("infunc" + currentUser)
+        serializer = UserSubjectSerializer(currentUser)
+        return HttpResponse(status=200)
+
+    return HttpResponse(status=200)

@@ -1,5 +1,8 @@
 package com.example.swudolistapp
 
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,46 +10,165 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SelectSubjectActivity : AppCompatActivity() {
+
+    private val sharedManager: SharedManager by lazy { SharedManager(this) }
+
+    // retrofit
+    var retrofit = Retrofit.Builder()
+        .baseUrl("http://10.0.2.2:8000")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    // 요청 서비스
+    var updateSubjectService: MyAPI = retrofit.create(MyAPI::class.java)
+    // 로그아웃 서비스
+    var logoutService: MyAPI = retrofit.create(MyAPI::class.java)
+
+    var subjectArr = arrayOf("JAVA프로그래밍기초", "C++프로그래밍기초", "자료구조")
+    var subjectCode = arrayOf("MT01044", "MT01043", "MT01019")
+    var selectItems = ArrayList<String>(subjectCode.size)
+    var subjectStr = ""
+    var checked: BooleanArray = BooleanArray(subjectCode.size)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_subject)
 
-
-        //getSubjectList()
-
     }
 
+//    옵션 메뉴 생성
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
+    // 선택 과목 변경
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.menu_my_change_subject -> Log.e("a", "change subject") // 과목 변경
-            R.id.menu_my_logout -> Log.e("b", "logout") // 로그아웃
+        when (item.itemId) {
+            // 과목 변경
+            R.id.menu_my_change_subject -> {
+                // 과목 변경
+                stringToArrayList(sharedManager.getCurrentUser().subjects.toString())
+                setChecked()
+                var builder = AlertDialog.Builder(this)
+                builder.setTitle("과목 선택")
+                builder.setMultiChoiceItems(
+                    subjectArr,
+                    checked,
+                    object : DialogInterface.OnMultiChoiceClickListener {
+                        override fun onClick(
+                            dialog: DialogInterface?,
+                            which: Int,
+                            isChecked: Boolean
+                        ) {
+                            if (isChecked) {
+                                selectItems.add(subjectCode[which])
+                                checked[which] = true
+                            } else if (selectItems.contains(subjectCode[which])) {
+                                selectItems.remove(subjectCode[which])
+                                checked[which] = false
+                            }
+                        }
+                    }
+                )
+
+                var listener = object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        subjectStr = ""
+                        for (item in selectItems) {
+                            subjectStr += item + ' '
+                        }
+
+                        sharedManager.prefs.edit().putString("subjects", subjectStr).apply()
+                        updateSubjectService.requestChange(sharedManager.getCurrentUser().id.toString(),
+                            sharedManager.getCurrentUser().subjects.toString()).enqueue(object: Callback<PostItem>{
+                            override fun onFailure(call: Call<PostItem>, t: Throwable) {
+                                t.printStackTrace()
+                            }
+
+                            override fun onResponse(
+                                call: Call<PostItem>,
+                                response: Response<PostItem>
+                            ) {
+                                var update = response.body()
+                                Log.d("Login", "msg: " + update?.msg)
+                                Log.d("Login", "code: " + update?.code)
+                            }
+                            })
+                    }
+                }
+                builder.setPositiveButton("확인", listener)
+                builder.setNegativeButton("취소", null)
+                builder.show()
+            }
+            // 로그아웃
+            R.id.menu_my_logout -> {
+                var id = sharedManager.getCurrentUser().id.toString()
+                Log.e("logout id" , id)
+                logoutService.requestLogout(id).enqueue(object : Callback<PostItem>{
+                    override fun onFailure(call: Call<PostItem>, t: Throwable) {
+                        t.printStackTrace()
+                    }
+
+                    override fun onResponse(call: Call<PostItem>, response: Response<PostItem>) {
+                        var logout = response.body()
+                        Log.d("Login", "msg: " + logout?.msg)
+                        Log.d("Login", "code: " + logout?.code)
+
+                        // sharedPreference 비우기
+                        val currentUser = User().apply {
+                            id = ""
+                            pw = ""
+                            email = ""
+                            subjects = ""
+                        }
+                        sharedManager.saveCurrentUser(currentUser)
+
+                        val intent = Intent(this@SelectSubjectActivity, LoginActivity::class.java)
+                        startActivity(intent)
+                    }
+                })
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    // 선택한 과목 List 생성
-    fun getSubjectList(){
-        val subjectList = intent.getStringArrayListExtra("selectSubject")
-
-        if(intent.hasExtra("selectSubject")){
-            Log.e("SelectSubjectActivity", "첫 번째 데이터 :" + subjectList.get(0))
-        }else{
-            Log.e("SelectSubjectActivity", "가져온 데이터 없음!")
+    // String To ArrayList - String으로 받은 subjects를 ArrayList로 바꿈
+    fun stringToArrayList(s: String) {
+        selectItems.clear()
+        var str = s.trim().splitToSequence(" ")
+            .filter { it.isNotEmpty() }
+            .toList()
+        for (item in str) {
+            if (!selectItems.contains(item)) {
+                selectItems.add(item.toString())
+            }
         }
 
-//        for (sub in subjectList){
-//            //val tv_subject: TextView = TextView(this)
-//
-//        }
-
     }
+
+    // 선택된 과목 담기
+    fun setChecked(): BooleanArray {
+        var i = 0
+        // 선택한 코드 checked 상태 설정
+        for (item in subjectCode) {
+            if (selectItems.contains(item)) {
+                checked.set(i, value = true)
+            } else {
+                checked.set(i, value = false)
+            }
+            i++
+        }
+        return checked
+    }
+
 }

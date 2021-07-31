@@ -1,6 +1,7 @@
 package com.example.swudolistapp
 
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
 
-    var login: Login? = null
+    var login: PostItem? = null
+    private val sharedManager: SharedManager by lazy { SharedManager(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
-        var loginService: LoginService = retrofit.create(LoginService::class.java)
+        var loginService: MyAPI = retrofit.create(MyAPI::class.java)
 
         // 로그인 버튼 클릭 - 로그인
         btn_login.setOnClickListener {
@@ -35,28 +37,22 @@ class LoginActivity : AppCompatActivity() {
             var t_id = et_id.text.toString()
             var t_pw = et_pw.text.toString()
 
-            loginService.requestLogin(t_id, t_pw).enqueue(object : Callback<Login> {
-                override fun onFailure(call: Call<Login>, t: Throwable) {
+            loginService.requestLogin(t_id, t_pw).enqueue(object : Callback<PostItem> {
+                override fun onFailure(call: Call<PostItem>, t: Throwable) {
 //                로그인 실패
                     Log.e("Login", t.message)
-                    var dialog = AlertDialog.Builder(this@LoginActivity)
-                    dialog.setTitle("Error")
-                    dialog.setMessage("Response Fail")
-                    dialog.show()
-
                 }
 
-                override fun onResponse(call: Call<Login>, response: Response<Login>) {
+                override fun onResponse(call: Call<PostItem>, response: Response<PostItem>) {
 //                로그인 성공
                     login = response.body()
                     Log.d("Login", "msg: " + login?.msg)
                     Log.d("Login", "code: " + login?.code)
-                    var dialog = AlertDialog.Builder(this@LoginActivity)
-                    dialog.setTitle(login?.msg)
-                    dialog.setMessage(login?.code)
-                    dialog.show()
 
                     if(login?.code.equals("0000")){
+
+                        // SharedPreference - 로그인 정보 및 subject 내용까지 얻어와야 함. - GET 필요
+
                         val intent = Intent(this@LoginActivity, SelectSubjectActivity::class.java)
                         startActivity(intent)
                     }
@@ -74,6 +70,5 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
             startActivity(intent)
         }
-
     }
 }

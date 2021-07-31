@@ -11,5 +11,8 @@ urlpatterns = [
     # path('login/', views.login),
     path('app_login/', views.app_login),
     path('app_register/', views.app_register),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('app_update/', views.app_update_subject),
+    path('app_get_subject/', views.app_get_subject),
+    path('app_logout/', views.app_logout),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
