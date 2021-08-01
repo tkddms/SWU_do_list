@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+<!--    해당 과목으로 잘 넘어갔나 확인만 할 용도 - 이후 지울 예정 -->
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -16,5 +18,59 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/tv_main_subject_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="과목명"
+        android:textSize="34sp"
+        android:padding="8dp"
+        android:background="#ffaaaa"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ly_mission"
+        android:layout_width="412dp"
+        android:layout_height="168dp"
+        android:layout_marginTop="8dp"
+        android:background="#998811"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_main_subject_name" >
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="더보기" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CheckBox" />
+
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CheckBox" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ly_board"
+        android:layout_width="409dp"
+        android:layout_height="315dp"
+        android:layout_marginTop="16dp"
+        android:background="#ddbbaa"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ly_mission"></LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

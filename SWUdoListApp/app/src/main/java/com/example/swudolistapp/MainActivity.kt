@@ -2,6 +2,7 @@ package com.example.swudolistapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -13,7 +14,12 @@ class MainActivity : AppCompatActivity() {
 
         if (intent.hasExtra("subject_name")) {
             textView.text = intent.getStringExtra("subject_name")
-        } else { }
+
+
+
+        } else {
+            Toast.makeText(applicationContext, "해당 과목 data가 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
+        }
         
     }
 }
