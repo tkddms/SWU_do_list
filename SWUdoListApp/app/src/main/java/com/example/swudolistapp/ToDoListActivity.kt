@@ -27,9 +27,12 @@ class ToDoListActivity : AppCompatActivity() {
     var subjectCodeArr = arrayOf("MT01044", "MT01043", "MT01019")
 
     var subjectCode: String = ""
-    var todoList: ArrayList<ToDoListData> = ArrayList()
 
-    val mAdapter = ToDoListAdapter(this, todoList)
+    var count = 0
+
+    companion object{
+        var todoList = arrayListOf<ToDoListData>()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,22 +62,20 @@ class ToDoListActivity : AppCompatActivity() {
                 var datas = response.body()
                 if (datas != null) {
                     for (data in datas){
-                        Log.e("datas", data.context)
-                        Log.e("datas", data.checked.toString())
-                        todoList.add(ToDoListData(data.context, data.checked))
-
+                        if(todoList.contains(ToDoListData(data.context, false)) || todoList.contains(ToDoListData(data.context, true))){
+                            continue
+                        }else{
+                            todoList.add(ToDoListData(data.context, false))
+                        }
                     }
                 }
                 setToDoListView()
-
             }
 
             override fun onFailure(call: Call<List<ToDoListData>>, t: Throwable) {
                 t.printStackTrace()
             }
-
         })
-
 
         // todolist 추가
         btn_add_tdl.setOnClickListener {
@@ -112,13 +113,7 @@ class ToDoListActivity : AppCompatActivity() {
                 .show()
         }
 
-        // check 건드렸을 때.
-        mAdapter.setOnItemClickListener(object : ToDoListAdapter.OnItemClickListener{
-            override fun onItemClick(v: View, data: ToDoListData, pos: Int) {
-                Log.e("check", pos.toString())
-                Log.e("check", todoList.get(pos).checked.toString())
-            }
-        })
+
 
     }
 

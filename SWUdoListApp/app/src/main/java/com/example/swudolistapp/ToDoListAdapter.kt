@@ -1,6 +1,8 @@
 package com.example.swudolistapp
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,27 +13,19 @@ import androidx.recyclerview.widget.RecyclerView
 class ToDoListAdapter(private val context: Context, private val dataList: ArrayList<ToDoListData>):
     RecyclerView.Adapter<ToDoListAdapter.ViewHolder>() {
 
-    interface OnItemClickListener{
-        fun onItemClick(v: View, data: ToDoListData, pos: Int)
-    }
-
-    private var listener: OnItemClickListener? = null
-    fun setOnItemClickListener(listener: OnItemClickListener){
-        this.listener = listener
-    }
+    private var ck = 0
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         private val tdlCheckBox = view.findViewById<CheckBox>(R.id.tdl_cb_rv)
 
-        fun bind(toDoListData: ToDoListData){
-            tdlCheckBox.text = toDoListData.context
+        fun bind(toDoList: ToDoListData, num: Int){
+            tdlCheckBox.text = toDoList.context
+            tdlCheckBox.isChecked = toDoList.checked
 
-            val pos = adapterPosition
-            if(pos!=RecyclerView.NO_POSITION){
-                itemView.setOnClickListener {
-                    listener?.onItemClick(itemView, toDoListData, pos)
-                }
+            tdlCheckBox.setOnClickListener {
+                toDoList.checked = tdlCheckBox.isChecked
             }
+
         }
     }
 
@@ -45,7 +39,7 @@ class ToDoListAdapter(private val context: Context, private val dataList: ArrayL
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(dataList[position])
+        holder.bind(dataList[position], position)
     }
 
 }

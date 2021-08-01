@@ -7,5 +7,5 @@ data class SubjectListData(
 
 data class ToDoListData(
     val context: String,
-    val checked: Boolean,
+    var checked: Boolean,
 )
