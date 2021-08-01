@@ -23,7 +23,6 @@ class Post(models.Model):
         return 'Post: {}'.format(self.subject_code)
 
 
-
 # To-Do-List Model - 미션 적기
 class ToDoList(models.Model):
     subject_code = models.CharField(max_length=10, null=False)

@@ -14,5 +14,7 @@ urlpatterns = [
     path('app_update/', views.app_update_subject),
     path('app_get_user/', views.app_get_user),
     path('app_logout/', views.app_logout),
+    path('app_add_todolist/', views.app_add_toDoList),
+    path('app_get_todolist/', views.app_get_toDoList),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

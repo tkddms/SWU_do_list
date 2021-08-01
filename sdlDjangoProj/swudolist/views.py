@@ -5,11 +5,12 @@ from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import F
 from django.http import JsonResponse, HttpResponse, QueryDict
 # from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from .models import sdiUser
+from .models import sdiUser, ToDoList
 from .serializers import UserSerializer, UserSubjectSerializer
 
 
@@ -95,7 +96,7 @@ def app_register(request):
         sdiuser = sdiUser(user=user, user_subjects=subject)
         # users_m = sdiUser.objects.create_user(username=id, user_subjects=subject)
         sdiuser.save()
-        
+
         result = authenticate(username=id, password=pw)
 
         if result:
@@ -127,6 +128,7 @@ def app_logout(request):
     auth.logout(request)
     return JsonResponse({'code': '0000', 'msg': 'logout success'}, status=200)
 
+# user 정보 얻기
 def app_get_user(request):
     put = str(request).split("=")[1]
     id = put.split("'")[0]
@@ -137,3 +139,32 @@ def app_get_user(request):
     subjcets = sdiuser.user_subjects
 
     return JsonResponse({'subjects': subjcets, 'email': email}, status=200)
+
+# to-do-list 내용 얻기
+def app_get_toDoList(request):
+    query = str(request).split("=")[1]
+    subject_code = query.split("'")[0]
+
+    lists = list(ToDoList.objects.filter(subject_code=subject_code).values('checked', 'context'))
+
+    print(lists)
+    # for list in
+
+    return JsonResponse(lists, safe=False, status=202)
+    # return JsonResponse({'subjects': subjcets, 'email': email}, status=200)
+
+# to-do-list 추가
+@csrf_exempt
+def app_add_toDoList(request):
+    if request.method == 'POST':
+        subject = request.POST.get("subject_code")
+        context = request.POST.get("context")
+        print("subject - " + subject + " context - " + context)
+
+        try:
+            todolist = ToDoList(subject_code=subject, context=context)
+            todolist.save()
+            print("todolist 확인: " + todolist.context)
+            return JsonResponse({'code': '0000', 'msg': 'add success!'}, status=200)
+        except:
+            return JsonResponse({'code': '1001', 'msg': 'add fail'}, status=200)

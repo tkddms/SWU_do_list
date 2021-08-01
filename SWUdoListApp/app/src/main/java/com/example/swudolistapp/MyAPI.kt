@@ -34,14 +34,21 @@ interface MyAPI {
         @Field("user_update_subject") user_update_subject: String,
     ): Call<PostItem>
 
-//    @GET("/app_get_subject/")
-//    fun getSubjects(
-//        @Query("user_subjects") user_subjects: String,
-//    ): Call<RequestSubject>
-
     @GET("/app_get_user/")
     fun getUser(
         @Query("user_id") user_id: String,
     ): Call<GetInfo>
+
+    @FormUrlEncoded
+    @POST("/app_add_todolist/")
+    fun addTodolist(
+        @Field("subject_code") subject_code: String,
+        @Field("context") context: String,
+    ): Call<PostItem>
+
+    @GET("/app_get_todolist/")
+    fun getTodolist(
+        @Query("subject_code") subject_code: String,
+    ): Call<List<ToDoListData>>
 
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tdl_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="SWU-DO-LIST 입력"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="24dp"
+        android:textSize="22dp"
+        />
+
+
+    <EditText
+        android:id="@+id/tdl_dialog_context"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="텍스트릅 입력해주세요."
+        android:text=""
+        android:inputType="textLongMessage"
+        android:ems="14"/>
+
+</LinearLayout>

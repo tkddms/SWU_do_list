@@ -48,23 +48,10 @@ class SelectSubjectActivity : AppCompatActivity() {
         setContentView(R.layout.activity_select_subject)
 
         // 초반 selectItems 설정 및 subjectList 설정
-        stringToArrayList(sharedManager.getCurrentUser().subjects.toString())
-
-        for (item in selectItems){
-            subjectList.add(SubjectListData(subjectArr[subjectCode.indexOf(item)], item))
-        }
-
-        for (item in subjectList){
-            Log.e("subjectLis", item.subjectName)
-        }
+        setSubjectList()
 
         // SubjectList 설정 - subjectListAdapter, List 화면에 나오도록 함.
-        val mAdapter = SubjectListAdapter(this, subjectList)
-        rv_select_sub.adapter = mAdapter
-
-        val layout = LinearLayoutManager(this)
-        rv_select_sub.layoutManager = layout
-        rv_select_sub.setHasFixedSize(true)
+        setSubjectListView()
 
     }
 
@@ -130,12 +117,17 @@ class SelectSubjectActivity : AppCompatActivity() {
                                 Log.d("Login", "msg: " + update?.msg)
                                 Log.d("Login", "code: " + update?.code)
                             }
-                            })
+                            }
+                        )
+                        setSubjectList()
+                        setSubjectListView()
+
                     }
                 }
                 builder.setPositiveButton("확인", listener)
                 builder.setNegativeButton("취소", null)
                 builder.show()
+
             }
             // 로그아웃
             R.id.menu_my_logout -> {
@@ -202,14 +194,21 @@ class SelectSubjectActivity : AppCompatActivity() {
     // List 만들기
     fun setSubjectList(){
         // subjects 리스트 불러오기
+        subjectList.clear()
         stringToArrayList(sharedManager.getCurrentUser().subjects.toString())
 
         for (item in selectItems){
-            Log.e("setSubjectList", item)
-            subjectList.add(SubjectListData(item, subjectCode[subjectArr.indexOf(item)]))
-            Log.e("subjectList", subjectList.size.toString())
+            subjectList.add(SubjectListData(subjectArr[subjectCode.indexOf(item)], item))
         }
+    }
 
+    fun setSubjectListView(){
+        val mAdapter = SubjectListAdapter(this, subjectList)
+        rv_select_sub.adapter = mAdapter
+
+        val layout = LinearLayoutManager(this)
+        rv_select_sub.layoutManager = layout
+        rv_select_sub.setHasFixedSize(true)
     }
 
 }

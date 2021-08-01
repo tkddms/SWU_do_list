@@ -12,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 class SubjectListAdapter(private val context: Context, private val dataList: ArrayList<SubjectListData>):
     RecyclerView.Adapter<SubjectListAdapter.ViewHolder>() {
 
-//    private lateinit var itemClickListener: OnItemClickListener
-
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         private val subjectName = view.findViewById<TextView>(R.id.tv_rv_name)
         private val subjectCode = view.findViewById<TextView>(R.id.tv_rv_code)
@@ -43,22 +41,5 @@ class SubjectListAdapter(private val context: Context, private val dataList: Arr
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(dataList[position], context)
     }
-
-//    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        holder.bind(dataList[position], context)
-//
-//        holder.itemView.setOnClickListener{
-//            itemClickListener.onClick(it, position)
-//        }
-//    }
-//
-//    interface OnItemClickListener{
-//        fun onClick(v: View, position: Int)
-//    }
-//
-//    fun setItemClickListener(onItemClickListener: OnItemClickListener){
-//        this.itemClickListener = onItemClickListener
-//    }
-
 
 }
