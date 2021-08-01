@@ -2,6 +2,7 @@ package com.example.swudolistapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -9,6 +10,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         
         // 전체적인 게시판+미션 친구들 보이는 곳
+
+        if (intent.hasExtra("subject_name")) {
+            textView.text = intent.getStringExtra("subject_name")
+        } else { }
         
     }
 }

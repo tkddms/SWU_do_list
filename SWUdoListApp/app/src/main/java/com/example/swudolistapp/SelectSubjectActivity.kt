@@ -11,6 +11,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_select_subject.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SelectSubjectActivity : AppCompatActivity() {
 
+    // sharedPreference
     private val sharedManager: SharedManager by lazy { SharedManager(this) }
 
     // retrofit
@@ -38,10 +41,30 @@ class SelectSubjectActivity : AppCompatActivity() {
     var subjectStr = ""
     var checked: BooleanArray = BooleanArray(subjectCode.size)
 
+    var subjectList: ArrayList<SubjectListData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_subject)
+
+        // 초반 selectItems 설정 및 subjectList 설정
+        stringToArrayList(sharedManager.getCurrentUser().subjects.toString())
+
+        for (item in selectItems){
+            subjectList.add(SubjectListData(subjectArr[subjectCode.indexOf(item)], item))
+        }
+
+        for (item in subjectList){
+            Log.e("subjectLis", item.subjectName)
+        }
+
+        // SubjectList 설정 - subjectListAdapter, List 화면에 나오도록 함.
+        val mAdapter = SubjectListAdapter(this, subjectList)
+        rv_select_sub.adapter = mAdapter
+
+        val layout = LinearLayoutManager(this)
+        rv_select_sub.layoutManager = layout
+        rv_select_sub.setHasFixedSize(true)
 
     }
 
@@ -57,7 +80,6 @@ class SelectSubjectActivity : AppCompatActivity() {
             // 과목 변경
             R.id.menu_my_change_subject -> {
                 // 과목 변경
-                stringToArrayList(sharedManager.getCurrentUser().subjects.toString())
                 setChecked()
                 var builder = AlertDialog.Builder(this)
                 builder.setTitle("과목 선택")
@@ -88,7 +110,12 @@ class SelectSubjectActivity : AppCompatActivity() {
                             subjectStr += item + ' '
                         }
 
+                        // 변경된 subjects prefs에 저장
                         sharedManager.prefs.edit().putString("subjects", subjectStr).apply()
+
+                        // 변경된 내용을 selectItems에 적용
+                        stringToArrayList(sharedManager.getCurrentUser().subjects.toString())
+
                         updateSubjectService.requestChange(sharedManager.getCurrentUser().id.toString(),
                             sharedManager.getCurrentUser().subjects.toString()).enqueue(object: Callback<PostItem>{
                             override fun onFailure(call: Call<PostItem>, t: Throwable) {
@@ -144,16 +171,17 @@ class SelectSubjectActivity : AppCompatActivity() {
 
     // String To ArrayList - String으로 받은 subjects를 ArrayList로 바꿈
     fun stringToArrayList(s: String) {
+
         selectItems.clear()
         var str = s.trim().splitToSequence(" ")
             .filter { it.isNotEmpty() }
             .toList()
+
         for (item in str) {
             if (!selectItems.contains(item)) {
                 selectItems.add(item.toString())
             }
         }
-
     }
 
     // 선택된 과목 담기
@@ -169,6 +197,19 @@ class SelectSubjectActivity : AppCompatActivity() {
             i++
         }
         return checked
+    }
+
+    // List 만들기
+    fun setSubjectList(){
+        // subjects 리스트 불러오기
+        stringToArrayList(sharedManager.getCurrentUser().subjects.toString())
+
+        for (item in selectItems){
+            Log.e("setSubjectList", item)
+            subjectList.add(SubjectListData(item, subjectCode[subjectArr.indexOf(item)]))
+            Log.e("subjectList", subjectList.size.toString())
+        }
+
     }
 
 }
