@@ -2,8 +2,9 @@
 
 import retrofit2.Call
 import retrofit2.http.*
+import java.util.*
 
-interface MyAPI {
+ interface MyAPI {
 
     @FormUrlEncoded
     @POST("/app_login/")
@@ -50,5 +51,14 @@ interface MyAPI {
     fun getTodolist(
         @Query("subject_code") subject_code: String,
     ): Call<List<ToDoListData>>
+
+    @POST("/app_edit_post/")
+    fun editPost(
+        @Field("author") author: String,
+        @Field("title") title: String,
+        @Field("context") context: String,
+        @Field("subject") subject: String,
+        @Field("created") created: Date,
+    )
 
 }
