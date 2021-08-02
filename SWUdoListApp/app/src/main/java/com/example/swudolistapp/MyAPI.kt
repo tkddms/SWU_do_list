@@ -52,13 +52,18 @@ import java.util.*
         @Query("subject_code") subject_code: String,
     ): Call<List<ToDoListData>>
 
+    @FormUrlEncoded
     @POST("/app_edit_post/")
     fun editPost(
         @Field("author") author: String,
         @Field("title") title: String,
         @Field("context") context: String,
         @Field("subject") subject: String,
-        @Field("created") created: Date,
-    )
+    ): Call<EditItem>
+
+    @GET("/app_get_posts/")
+    fun getPost(
+        @Query("subject") subject: String,
+    ): Call<List<BoardData>>
 
 }

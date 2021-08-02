@@ -13,11 +13,14 @@ class BoardListAdapter(private val context: Context, private val dataList: Array
     RecyclerView.Adapter<BoardListAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        private val title = view.findViewById<TextView>(R.id.tv_board_post_title)
-        private val context = view.findViewById<TextView>(R.id.tv_board_post_context)
-        private val created = view.findViewById<TextView>(R.id.tv_board_post_date)
+        private val tv_title = view.findViewById<TextView>(R.id.tv_board_post_title)
+        private val tv_context = view.findViewById<TextView>(R.id.tv_board_post_context)
+        private val tv_created = view.findViewById<TextView>(R.id.tv_board_post_date)
 
         fun bind(boardData: BoardData, context: Context){
+            tv_title.text = boardData.title
+            tv_context.text = boardData.context
+            tv_created.text = boardData.created
 
             itemView.setOnClickListener {
                 Intent(context, PostActivity::class.java).apply {

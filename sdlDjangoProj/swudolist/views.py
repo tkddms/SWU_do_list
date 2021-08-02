@@ -1,6 +1,5 @@
 import json
 import re
-
 from django.contrib import auth
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
@@ -8,9 +7,10 @@ from django.contrib.auth.models import User
 from django.db.models import F
 from django.http import JsonResponse, HttpResponse, QueryDict
 # from django.shortcuts import render
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from .models import sdiUser, ToDoList
+from .models import sdiUser, ToDoList, Post
 from .serializers import UserSerializer, UserSubjectSerializer
 
 
@@ -151,7 +151,6 @@ def app_get_toDoList(request):
     # for list in
 
     return JsonResponse(lists, safe=False, status=202)
-    # return JsonResponse({'subjects': subjcets, 'email': email}, status=200)
 
 # to-do-list 추가
 @csrf_exempt
@@ -168,3 +167,36 @@ def app_add_toDoList(request):
             return JsonResponse({'code': '0000', 'msg': 'add success!'}, status=200)
         except:
             return JsonResponse({'code': '1001', 'msg': 'add fail'}, status=200)
+
+@csrf_exempt
+def app_edit_post(request):
+
+    if request.method == 'POST':
+        author = request.POST.get("author")
+        title = request.POST.get("title")
+        context = request.POST.get("context")
+        subject = request.POST.get("subject")
+        created = timezone.now()
+        print("subject - " + subject + " context - " + context + " title - " + title + " author - " + author + " create - " + str(created) )
+
+        try:
+            post = Post(author=sdiUser.objects.get(user=User.objects.get(username=author)), subject=subject, title=title, context=context, created=created)
+            post.save()
+
+            strCreated = created.strftime("%Y-%m-%d %H:%M:%S")
+            print("post 확인: " + strCreated)
+
+            return JsonResponse({'created': strCreated}, status=200)
+
+        except:
+            return JsonResponse({'created': 'fail'}, status=200)
+
+def app_get_posts(request):
+    query = str(request).split("=")[1]
+    subject_code = query.split("'")[0]
+
+    lists = list(Post.objects.filter(subject=subject_code).values())
+
+    print(lists)
+
+    return JsonResponse(lists, safe=False, status=202)

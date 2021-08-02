@@ -1,6 +1,7 @@
 package com.example.swudolistapp
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 // DATA 형태 정의
 data class PostItem (
@@ -18,4 +19,8 @@ data class User(
     var pw: String? = null,
     var email: String? = null,
     var subjects: String? = null,
+)
+
+data class EditItem(
+    val created: String,
 )

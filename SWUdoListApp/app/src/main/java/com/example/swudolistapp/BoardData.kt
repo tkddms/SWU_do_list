@@ -20,5 +20,5 @@ data class BoardData(
     val subject: String,
     val title: String,
     val context: String,
-    val created: Date,
+    val created: String,
 ): Parcelable
