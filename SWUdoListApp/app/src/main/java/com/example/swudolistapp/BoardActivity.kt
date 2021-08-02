@@ -48,12 +48,29 @@ class BoardActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "error", Toast.LENGTH_SHORT).show()
         }
 
+        addBoardService.getPost(subjectCode).enqueue(object : Callback<List<BoardData>>{
+            override fun onResponse(
+                call: Call<List<BoardData>>,
+                response: Response<List<BoardData>>
+            ) {
+                var datas = response.body()
+                if (datas != null) {
+                    for (data in datas){
+                        boardDataList.add(0, BoardData(data.author, data.subject, data.title, data.context, data.created))
+                    }
+                }
+                setBoardListView()
+            }
+
+            override fun onFailure(call: Call<List<BoardData>>, t: Throwable) {
+                t.printStackTrace()
+            }
+        })
+
+        // 게시글 추가
         btn_board_edit.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             val dialogView = layoutInflater.inflate(R.layout.board_dialog_item, null)
-
-
-
 
             builder.setView(dialogView)
                 .setPositiveButton("등록"){ dialogInterface, i ->
@@ -75,9 +92,9 @@ class BoardActivity : AppCompatActivity() {
                             Log.d("EDIT", "msg: " + register?.created)
 
                             if (register != null) {
-                                boardDataList.add(BoardData(author, subjectCode, dialogTitle, dialogContext, register.created))
+                                boardDataList.add(0, BoardData(author, subjectCode, dialogTitle, dialogContext, register.created))
                             }
-                            setSubjectListView()
+                            setBoardListView()
                         }
 
                         override fun onFailure(call: Call<EditItem>, t: Throwable) {
@@ -93,7 +110,7 @@ class BoardActivity : AppCompatActivity() {
         }
     }
 
-    fun setSubjectListView(){
+    fun setBoardListView(){
         val mAdapter = BoardListAdapter(this, boardDataList)
         rv_board.adapter = mAdapter
 

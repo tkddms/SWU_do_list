@@ -62,6 +62,8 @@ class ToDoListActivity : AppCompatActivity() {
                 var datas = response.body()
                 if (datas != null) {
                     for (data in datas){
+                        Log.e("post data", data.toString())
+
                         if(todoList.contains(ToDoListData(data.context, false)) || todoList.contains(ToDoListData(data.context, true))){
                             continue
                         }else{

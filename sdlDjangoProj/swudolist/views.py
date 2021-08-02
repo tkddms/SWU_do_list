@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from .models import sdiUser, ToDoList, Post
 from .serializers import UserSerializer, UserSubjectSerializer
+from collections import OrderedDict
 
 
 # Create your views here.
@@ -145,12 +146,10 @@ def app_get_toDoList(request):
     query = str(request).split("=")[1]
     subject_code = query.split("'")[0]
 
-    lists = list(ToDoList.objects.filter(subject_code=subject_code).values('checked', 'context'))
+    # lists = list(ToDoList.objects.filter(subject_code=subject_code).values('checked', 'context'))
+    lists = ToDoList.objects.filter(subject_code=subject_code).values('checked', 'context')
 
-    print(lists)
-    # for list in
-
-    return JsonResponse(lists, safe=False, status=202)
+    return JsonResponse(list(lists), safe=False, status=202)
 
 # to-do-list 추가
 @csrf_exempt
@@ -176,7 +175,7 @@ def app_edit_post(request):
         title = request.POST.get("title")
         context = request.POST.get("context")
         subject = request.POST.get("subject")
-        created = timezone.now()
+        created = timezone.localtime()
         print("subject - " + subject + " context - " + context + " title - " + title + " author - " + author + " create - " + str(created) )
 
         try:
@@ -195,8 +194,18 @@ def app_get_posts(request):
     query = str(request).split("=")[1]
     subject_code = query.split("'")[0]
 
-    lists = list(Post.objects.filter(subject=subject_code).values())
+    lists = Post.objects.filter(subject=subject_code)
 
-    print(lists)
+    new_list = []
 
-    return JsonResponse(lists, safe=False, status=202)
+    for list in lists:
+        file_data = {
+            'author': list.author.user.username,
+            'subject': list.subject,
+            'title': list.title,
+            'context': list.context,
+            'created': list.created.strftime("%Y-%m-%d %H:%M:%S")
+        }
+        new_list.append(file_data)
+
+    return JsonResponse(new_list, safe=False, status=200)
