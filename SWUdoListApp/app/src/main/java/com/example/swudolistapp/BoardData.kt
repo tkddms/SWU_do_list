@@ -10,6 +10,7 @@ data class SubjectListData(
 )
 
 data class ToDoListData(
+    val subject: String,
     val context: String,
     var checked: Boolean,
 )

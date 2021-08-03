@@ -17,6 +17,9 @@ class LoginActivity : AppCompatActivity() {
     var login: PostItem? = null
     private val sharedManager: SharedManager by lazy { SharedManager(this) }
 
+    // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
+    var mBackWait:Long = 0
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -90,4 +93,15 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    override fun onBackPressed() {
+        // 뒤로가기 버튼 클릭
+        if(System.currentTimeMillis() - mBackWait >=2000 ) {
+            mBackWait = System.currentTimeMillis()
+            Toast.makeText(applicationContext, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        } else {
+            finish() //액티비티 종료
+        }
+    }
+    
 }

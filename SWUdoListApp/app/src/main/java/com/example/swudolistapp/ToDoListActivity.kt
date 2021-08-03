@@ -59,19 +59,13 @@ class ToDoListActivity : AppCompatActivity() {
                 response: Response<List<ToDoListData>>
             ) {
                 var datas = response.body()
+                todoList.clear()
                 if (datas != null) {
-                    todoList.clear()
                     for (data in datas){
-                        Log.e("post data", data.toString())
-
-                        if(todoList.contains(ToDoListData(data.context, false)) || todoList.contains(ToDoListData(data.context, true))){
-                            continue
-                        }else{
-                            todoList.add(ToDoListData(data.context, false))
-                        }
+                        todoList.add(ToDoListData(subjectCode, data.context, false))
                     }
+                    setToDoListView()
                 }
-                setToDoListView()
             }
 
             override fun onFailure(call: Call<List<ToDoListData>>, t: Throwable) {
@@ -95,8 +89,9 @@ class ToDoListActivity : AppCompatActivity() {
                             var register = response.body()
                             Log.d("ADD-LIST", "msg: " + register?.msg)
                             Log.d("ADD-LIST", "msg: " + register?.code)
+                            Log.e("addtodolist", todoList.toString())
 
-                            todoList.add(ToDoListData(dialogText.text.toString(), false))
+                            todoList.add(ToDoListData(subjectCode, dialogText.text.toString(), false))
                             setToDoListView()
                         }
 
@@ -115,11 +110,13 @@ class ToDoListActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        todoList.clear()
         super.onBackPressed()
         val intent = Intent(this@ToDoListActivity, MainActivity::class.java )
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra("subject_name",subjectPut)
         startActivity(intent)
+        finish()
     }
 
     // List 만들기

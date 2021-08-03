@@ -153,6 +153,7 @@ class SelectSubjectActivity : AppCompatActivity() {
                         sharedManager.saveCurrentUser(currentUser)
 
                         val intent = Intent(this@SelectSubjectActivity, LoginActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                     }
                 })

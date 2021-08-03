@@ -85,13 +85,10 @@ class PostActivity : AppCompatActivity() {
                                 response: Response<PostItem>
                             ) {
                                 var res = response.body()
-                                Log.e("code", res?.code)
-                                Log.e("msg", res?.msg)
-
                                 commentList.remove(CommentData(item.author, item.context, item.created))
 
                                 for(list in commentList){
-                                    Log.e("commentList", list.toString())
+                                    Log.e("commentList-removeComment", list.toString())
                                 }
 
                                 setCommentListView(mAdapter)
@@ -114,7 +111,7 @@ class PostActivity : AppCompatActivity() {
 
 
         // 댓글 표시
-        getCommentService.getComment(sharedManager.getCurrentUser().id.toString(), postItem.title, postItem.subject).enqueue(object : Callback<List<CommentData>>{
+        getCommentService.getComment(postItem.author, postItem.title, postItem.subject).enqueue(object : Callback<List<CommentData>>{
             override fun onResponse(
                 call: Call<List<CommentData>>,
                 response: Response<List<CommentData>>
@@ -125,11 +122,13 @@ class PostActivity : AppCompatActivity() {
                     commentList.clear()
                     for (data in datas){
                         if(!commentList.contains(data)) {
+                            Log.e("user", sharedManager.getCurrentUser().id.toString())
+                            Log.e("author", data.author)
                             commentList.add(CommentData(data.author, data.context, data.created))
                         }
                     }
                     for (list in commentList){
-                        Log.e("commentList", list.toString())
+                        Log.e("commentList-getComment", list.toString())
                     }
                 }
                 setCommentListView(mAdapter)
@@ -173,11 +172,13 @@ class PostActivity : AppCompatActivity() {
 
         // 댓글 추가
         btn_comment_add.setOnClickListener {
-            var author = sharedManager.getCurrentUser().id.toString()
+            var author = postItem.author
+            var user = sharedManager.getCurrentUser().id.toString()
             var comment_context = et_comment.text.toString()
             addCommentService.addComment(author, comment_context, postItem.title, postItem.subject ).enqueue(object : Callback<EditItem>{
                 override fun onResponse(call: Call<EditItem>, response: Response<EditItem>) {
-                    commentList.add(CommentData(author, comment_context, response.body()?.created.toString()))
+                    var created = response.body()?.created
+                    commentList.add(CommentData(user, comment_context, created.toString()))
                     setCommentListView(mAdapter)
                 }
 

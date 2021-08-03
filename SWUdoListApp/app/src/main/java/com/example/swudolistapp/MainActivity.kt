@@ -30,6 +30,10 @@ class MainActivity : AppCompatActivity() {
     var addTDLService: MyAPI = retrofit.create(MyAPI::class.java)
     var addBoardService: MyAPI = retrofit.create(MyAPI::class.java)
 
+    companion object{
+        var todoList = ArrayList<ToDoListData>()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,24 +50,21 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "해당 과목 data가 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
         }
 
+        // 미션 얻기
         addTDLService.getTodolist(subjectCode).enqueue(object : Callback<List<ToDoListData>> {
             override fun onResponse(
                 call: Call<List<ToDoListData>>,
                 response: Response<List<ToDoListData>>
             ) {
                 var datas = response.body()
+                ToDoListActivity.todoList.clear()
                 if (datas != null) {
                     for (data in datas){
                         Log.e("post data", data.toString())
-
-                        if(ToDoListActivity.todoList.contains(ToDoListData(data.context, false)) || ToDoListActivity.todoList.contains(ToDoListData(data.context, true))){
-                            continue
-                        }else{
-                            ToDoListActivity.todoList.add(ToDoListData(data.context, false))
-                        }
+                        ToDoListActivity.todoList.add(ToDoListData(subjectCode, data.context, false))
                     }
+                    setToDoListView()
                 }
-                setToDoListView()
             }
 
             override fun onFailure(call: Call<List<ToDoListData>>, t: Throwable) {
@@ -71,6 +72,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        // 게시글 얻기
         addBoardService.getPost(subjectCode).enqueue(object : Callback<List<BoardData>>{
             override fun onResponse(
                 call: Call<List<BoardData>>,
@@ -95,7 +97,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-
         // to-do-list 더보기
         btn_more_tdl.setOnClickListener {
             val intent = Intent(this@MainActivity, ToDoListActivity::class.java)
@@ -114,6 +115,7 @@ class MainActivity : AppCompatActivity() {
 
     fun setToDoListView(){
         val mAdapter = ToDoListAdapter(this, ToDoListActivity.todoList)
+        Log.e("todolist-setTodolistView", ToDoListActivity.todoList.toString())
         rv_main_todo.adapter = mAdapter
 
         val layout = LinearLayoutManager(this)

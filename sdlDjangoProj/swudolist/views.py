@@ -115,7 +115,7 @@ def app_update_subject(request):
             user.user_subjects = subject
             user.save()
             return JsonResponse({'code': '0000', 'msg': 'update success!'}, status=200)
-        except Exception as e:
+        except:
             # 해당 id의 User 객체를 불러오지 못했을 때
             return JsonResponse({'code': '1001', 'msg': 'not exist user'}, status=200)
 
@@ -141,7 +141,6 @@ def app_get_toDoList(request):
     query = str(request).split("=")[1]
     subject_code = query.split("'")[0]
 
-    # lists = list(ToDoList.objects.filter(subject_code=subject_code).values('checked', 'context'))
     lists = ToDoList.objects.filter(subject_code=subject_code).values('checked', 'context')
 
     return JsonResponse(list(lists), safe=False, status=202)

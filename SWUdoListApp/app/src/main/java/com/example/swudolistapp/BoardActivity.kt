@@ -55,7 +55,7 @@ class BoardActivity : AppCompatActivity() {
             boardDataList.remove(post)
         }
 
-        // 게시글
+        // 게시글 읽어오기
         addBoardService.getPost(subjectCode).enqueue(object : Callback<List<BoardData>>{
             override fun onResponse(
                 call: Call<List<BoardData>>,
