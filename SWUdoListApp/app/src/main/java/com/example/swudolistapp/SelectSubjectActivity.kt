@@ -161,6 +161,14 @@ class SelectSubjectActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    // 뒤로가기
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this@SelectSubjectActivity, LoginActivity::class.java )
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+    }
+
     // String To ArrayList - String으로 받은 subjects를 ArrayList로 바꿈
     fun stringToArrayList(s: String) {
 
@@ -170,8 +178,10 @@ class SelectSubjectActivity : AppCompatActivity() {
             .toList()
 
         for (item in str) {
+            Log.e("subjects", item)
             if (!selectItems.contains(item)) {
                 selectItems.add(item.toString())
+
             }
         }
     }

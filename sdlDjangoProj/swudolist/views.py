@@ -59,14 +59,10 @@ def user(request, pk):
 # 로그인 - 앱
 def app_login(request):
     if request.method == 'POST':
-        print("리퀘스트 로그: " + str(request.body))
         id = request.POST.get('user_id', '')
         pw = request.POST.get('user_pw', '')
-        print("id = " + id + " pw = " + pw)
 
         result = authenticate(username=id, password=pw)
-
-        print(result)
 
         if result:
             auth.login(request, result)
@@ -80,7 +76,6 @@ def app_login(request):
 @csrf_exempt
 def app_register(request):
     if request.method == 'POST':
-        print("리퀘스트 로그(sign_up): " + str(request.body))
         id = request.POST.get('user_r_id', '')
         pw = request.POST.get('user_r_pw', '')
         email = request.POST.get('user_r_email', '')
@@ -116,13 +111,12 @@ def app_update_subject(request):
         id = put.get("user_update_id")
         subject = put.get("user_update_subject")
         try:
-            user = sdiUser(user=User.objects.get(username=id))
+            user = sdiUser.objects.get(user=User.objects.get(username=id))
             user.user_subjects = subject
-            print("subject 확인: " + user.user_subjects)
+            user.save()
             return JsonResponse({'code': '0000', 'msg': 'update success!'}, status=200)
         except Exception as e:
             # 해당 id의 User 객체를 불러오지 못했을 때
-            print(e)
             return JsonResponse({'code': '1001', 'msg': 'not exist user'}, status=200)
 
 @csrf_exempt
@@ -158,12 +152,10 @@ def app_add_toDoList(request):
     if request.method == 'POST':
         subject = request.POST.get("subject_code")
         context = request.POST.get("context")
-        print("subject - " + subject + " context - " + context)
 
         try:
             todolist = ToDoList(subject_code=subject, context=context)
             todolist.save()
-            print("todolist 확인: " + todolist.context)
             return JsonResponse({'code': '0000', 'msg': 'add success!'}, status=200)
         except:
             return JsonResponse({'code': '1001', 'msg': 'add fail'}, status=200)
@@ -183,7 +175,6 @@ def app_edit_post(request):
             post.save()
 
             strCreated = created.strftime("%Y-%m-%d %H:%M:%S")
-            print("post 확인: " + strCreated)
 
             return JsonResponse({'created': strCreated}, status=200)
 
@@ -229,16 +220,11 @@ def app_delete_post(request):
 def app_delete_comment(request):
     query = str(request).split("=")
 
-    for q in query:
-        print(q, query.index(q))
-
     author = query[1].split('&')[0]
     title = query[2].split('&')[0]
     subject = query[3].split("&")[0]
     context = query[4].split("&")[0]
     created = query[5].split("'")[0]
-
-    print(author, title, subject, context)
 
     post = Post.objects.get(author=sdiUser.objects.get(user=User.objects.get(username=author)), title=title, subject=subject)
 
@@ -265,7 +251,6 @@ def app_add_comment(request):
             comment.save()
 
             strCreated = created.strftime("%Y-%m-%d %H:%M:%S")
-            print(strCreated)
 
             return JsonResponse({'created': strCreated}, status=200)
         except:
@@ -278,7 +263,9 @@ def app_get_comments(request):
     title = query[2].split('&')[0]
     subject = query[3].split("'")[0]
 
-    post = Post.objects.get(author=sdiUser.objects.get(user=User.objects.get(username=author)), title=title, subject=subject)
+    sdiuser = sdiUser.objects.get(user=User.objects.get(username=author))
+
+    post = Post.objects.get(author=sdiuser, subject=subject, title=title)
 
     lists = Comment.objects.filter(post=post)
 
@@ -293,3 +280,22 @@ def app_get_comments(request):
         new_list.append(file_data)
 
     return JsonResponse(new_list, safe=False, status=200)
+
+def app_update_checked(request):
+    if request.method == 'PUT':
+        put = QueryDict(request.body)
+
+        subject = put.get("subject")
+        context = put.get("context")
+        checked = put.get("checked")
+
+        try:
+            update_tdl = ToDoList.objects.get(subject=subject, context=context)
+            update_tdl.checked=checked
+            update_tdl.save()
+            print(update_tdl.checked)
+
+            return JsonResponse({'code': '0000', 'msg': 'update success!'}, status=200)
+        except:
+            # 해당 id의 User 객체를 불러오지 못했을 때
+            return JsonResponse({'code': '1001', 'msg': 'not exist user'}, status=200)

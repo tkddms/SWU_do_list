@@ -84,8 +84,7 @@ class RegisterActivity : AppCompatActivity() {
             var reg_email = et_register_email.text.toString()
 
             // 넘어갈 수 있도록 조건 검사
-            canSubmitForm()
-            if(isOk){
+            if(canSubmitForm()){
                 // 회원가입 가능 조건 충족 시 - 회원가입
                 registerService.requestRegister(reg_id, reg_pw, reg_email, subjectStr).enqueue(object: Callback<PostItem>{
                     override fun onFailure(call: Call<PostItem>, t: Throwable) {
@@ -108,15 +107,18 @@ class RegisterActivity : AppCompatActivity() {
                 sharedManager.saveCurrentUser(currentUser)
 
 
-                // 메인 화면으로 이동 - 이후 선택 화면으로 이동? 아니면 팝업으로 선택한 후에 이동하도록 할까?
+                // 메인 화면으로 이동
                 val intent = Intent(this@RegisterActivity, SelectSubjectActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
             }
         }
     }
 
     // 회원 가입 폼을 제대로 작성했는지 확인.
-    private fun canSubmitForm(){
+    private fun canSubmitForm(): Boolean{
+        isOk = true
+
         if (et_register_id.text.toString().equals("")){
             // id 입력란이 비어 있을 때
             et_register_id.setError("아이디 입력 란은 필수로 입력하셔야 합니다.")
@@ -149,5 +151,6 @@ class RegisterActivity : AppCompatActivity() {
             btn_select_subject.setError("과목은 1개 이상 선택해야 합니다.")
             isOk = false
         }
+        return isOk
     }
 }

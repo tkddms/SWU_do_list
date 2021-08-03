@@ -5,7 +5,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:clickable="true">
+    android:clickable="true"
+    android:background="@drawable/bg_custom_line">
 
     <TextView
         android:id="@+id/comment_nickname"
@@ -16,6 +17,7 @@
         android:text="익명"
         android:textSize="20dp"
         android:textStyle="bold"
+        android:fontFamily="@font/nanumgothic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -27,6 +29,7 @@
         android:minHeight="50dp"
         android:text="댓글 내용"
         android:textSize="18dp"
+        android:fontFamily="@font/nanumgothic"
         app:layout_constraintStart_toStartOf="@+id/comment_nickname"
         app:layout_constraintTop_toBottomOf="@+id/comment_nickname"
         android:clickable="true"/>
@@ -38,6 +41,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:text="2021-00-00 00:00:00"
+        android:fontFamily="@font/nanumgothic"
         app:layout_constraintBottom_toTopOf="@+id/tv_comment_context"
         app:layout_constraintStart_toEndOf="@+id/comment_nickname" />
 

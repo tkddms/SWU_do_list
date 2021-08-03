@@ -1,12 +1,16 @@
 package com.example.swudolistapp
 
+import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_post.*
 import kotlinx.android.synthetic.main.activity_to_do_list.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,8 +25,7 @@ class ToDoListActivity : AppCompatActivity() {
     var subjectCodeArr = arrayOf("MT01044", "MT01043", "MT01019")
 
     var subjectCode: String = ""
-
-    var count = 0
+    lateinit var subjectPut: String
 
     companion object{
         var todoList = arrayListOf<ToDoListData>()
@@ -38,16 +41,18 @@ class ToDoListActivity : AppCompatActivity() {
             .build()
 
         var addTDLService: MyAPI = retrofit.create(MyAPI::class.java)
+        var updateChecked: MyAPI = retrofit.create(MyAPI::class.java)
 
 
         if (intent.hasExtra("subject")) {
             // 해당 게시글 과목코드 얻기
-            subjectCode = subjectCodeArr.get(subjectArr.indexOf(intent.getStringExtra("subject")))
+            subjectPut = intent.getStringExtra("subject")
+            subjectCode = subjectCodeArr.get(subjectArr.indexOf(subjectPut))
         } else {
             Toast.makeText(applicationContext, "error", Toast.LENGTH_SHORT).show()
         }
 
-        // todolist 표시
+        // todolist 읽기
         addTDLService.getTodolist(subjectCode).enqueue(object : Callback<List<ToDoListData>>{
             override fun onResponse(
                 call: Call<List<ToDoListData>>,
@@ -55,6 +60,7 @@ class ToDoListActivity : AppCompatActivity() {
             ) {
                 var datas = response.body()
                 if (datas != null) {
+                    todoList.clear()
                     for (data in datas){
                         Log.e("post data", data.toString())
 
@@ -106,8 +112,14 @@ class ToDoListActivity : AppCompatActivity() {
                 .show()
         }
 
+    }
 
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this@ToDoListActivity, MainActivity::class.java )
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.putExtra("subject_name",subjectPut)
+        startActivity(intent)
     }
 
     // List 만들기

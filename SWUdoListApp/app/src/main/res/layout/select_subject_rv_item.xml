@@ -8,19 +8,20 @@
     android:paddingVertical="10dp"
     android:paddingHorizontal="10dp"
     android:clickable="true"
-    android:background="@drawable/border_bottom"
+    android:background="@drawable/bg_custom_line"
     >
 
     <TextView
         android:id="@+id/tv_rv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/bmyeonsung"
         android:text="과목 이름"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.041"
+        app:layout_constraintHorizontal_bias="0.051"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="과목 코드"
+        android:fontFamily="@font/nanumgothic"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/tv_rv_name"
         app:layout_constraintHorizontal_bias="0.0"

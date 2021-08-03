@@ -13,6 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="과목명"
+        android:fontFamily="@font/bmyeonsung"
         android:textSize="34sp"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +25,7 @@
         android:layout_width="412dp"
         android:layout_height="168dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/border_all"
+        android:background="@drawable/bg_custom_line"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,9 +35,10 @@
             android:id="@+id/btn_more_tdl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_all"
+            android:background="@drawable/bg_custom_line"
             android:text="미션 더보기"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/bmyeonsung"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_main_todo"
@@ -50,7 +52,7 @@
         android:layout_width="409dp"
         android:layout_height="315dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/border_all"
+        android:background="@drawable/bg_custom_line"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,8 +62,9 @@
             android:id="@+id/btn_more_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_all"
+            android:background="@drawable/bg_custom_line"
             android:text="게시글 더보기"
+            android:fontFamily="@font/bmyeonsung"
             android:textStyle="bold"/>
 
         <androidx.recyclerview.widget.RecyclerView

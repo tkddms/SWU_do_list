@@ -35,6 +35,14 @@ import java.util.*
         @Field("user_update_subject") user_update_subject: String,
     ): Call<PostItem>
 
+     @FormUrlEncoded
+     @PUT("/app_update_checked/")
+     fun updateChecked(
+         @Field("subject") subject: String,
+         @Field("context") context: String,
+         @Field("checked") checked: Boolean,
+     ): Call<PostItem>
+
     @GET("/app_get_user/")
     fun getUser(
         @Query("user_id") user_id: String,

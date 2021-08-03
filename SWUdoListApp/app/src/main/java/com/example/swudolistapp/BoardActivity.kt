@@ -1,5 +1,6 @@
 package com.example.swudolistapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -25,6 +26,7 @@ class BoardActivity : AppCompatActivity() {
     var subjectCodeArr = arrayOf("MT01044", "MT01043", "MT01019")
 
     var subjectCode = ""
+    lateinit var subjectPut: String
 
     companion object{
         var boardDataList = arrayListOf<BoardData>()
@@ -43,7 +45,8 @@ class BoardActivity : AppCompatActivity() {
 
         if (intent.hasExtra("subject")) {
             // 해당 게시글 과목코드 얻기
-            subjectCode = subjectCodeArr.get(subjectArr.indexOf(intent.getStringExtra("subject")))
+            subjectPut = intent.getStringExtra("subject")
+            subjectCode = subjectCodeArr.get(subjectArr.indexOf(subjectPut))
         }
 
         if (intent.hasExtra("post")){
@@ -118,6 +121,14 @@ class BoardActivity : AppCompatActivity() {
                 }
                 .show()
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this@BoardActivity, MainActivity::class.java )
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.putExtra("subject_name",subjectPut)
+        startActivity(intent)
     }
 
     fun setBoardListView(){

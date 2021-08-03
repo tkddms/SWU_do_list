@@ -22,5 +22,6 @@ urlpatterns = [
     path('app_add_comment/', views.app_add_comment),
     path('app_get_comments/', views.app_get_comments),
     path('app_delete_comment/', views.app_delete_comment),
+    path('app_update_checked/', views.app_update_checked),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]

@@ -26,7 +26,7 @@ class CommentAdapter(private val context: Context, private val dataList: ArrayLi
             tv_context.text = commentData.context
             tv_created.text = commentData.created
             if(commentData.author.equals(sharedManager.getCurrentUser().id)){
-                tv_author.setTextColor(ContextCompat.getColor(context!!, R.color.teal_700))
+                tv_author.setTextColor(ContextCompat.getColor(context!!, R.color.coral_500))
             }
         }
     }

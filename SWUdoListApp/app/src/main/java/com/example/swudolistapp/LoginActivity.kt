@@ -86,6 +86,7 @@ class LoginActivity : AppCompatActivity() {
         // 회원가입 tv 클릭 - 회원가입 화면 전환
         tv_register.setOnClickListener {
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
     }

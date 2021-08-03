@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:background="@drawable/border_all">
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/tdl_dialog_title"
@@ -12,22 +12,42 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="SWU-DO-LIST 입력"
+        android:fontFamily="@font/bmyeonsung"
         android:textStyle="bold"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="24dp"
+        android:padding="8dp"
+        android:background="@drawable/bg_custom_tv"
         android:textSize="22dp"
         />
 
 
-    <EditText
-        android:id="@+id/tdl_dialog_context"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="텍스트를 입력해주세요."
-        android:text=""
-        android:inputType="textLongMessage"
-        android:ems="14"/>
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_heart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/pixelheart"
+            android:layout_margin="4dp"
+            android:layout_gravity="center"/>
+
+        <EditText
+            android:id="@+id/tdl_dialog_context"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_custom_pinkdotted"
+            android:ems="14"
+            android:fontFamily="@font/nanumgothic"
+            android:hint="텍스트를 입력해주세요."
+            android:inputType="textLongMessage"
+            android:padding="5dp"
+            android:text="" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -25,6 +25,9 @@ class PostActivity : AppCompatActivity() {
 
     lateinit var postItem: BoardData
 
+    var subjectArr = arrayOf("JAVA프로그래밍기초", "C++프로그래밍기초", "자료구조")
+    var subjectCode = arrayOf("MT01044", "MT01043", "MT01019")
+
     // sharedPreference
     private val sharedManager: SharedManager by lazy { SharedManager(this) }
 
@@ -117,7 +120,9 @@ class PostActivity : AppCompatActivity() {
                 response: Response<List<CommentData>>
             ) {
                 var datas = response.body()
+                Log.e("datas", datas.toString())
                 if (datas != null) {
+                    commentList.clear()
                     for (data in datas){
                         if(!commentList.contains(data)) {
                             commentList.add(CommentData(data.author, data.context, data.created))
@@ -146,11 +151,9 @@ class PostActivity : AppCompatActivity() {
             builder.setPositiveButton("확인"){ dialogInterface: DialogInterface?, i: Int ->
                 deletePostService.deletePost(postItem.author, postItem.title, postItem.subject).enqueue(object : Callback<PostItem>{
                     override fun onResponse(call: Call<PostItem>, response: Response<PostItem>) {
-                        Log.e("code", response.body()?.code)
-                        Log.e("msg", response.body()?.msg)
-
                         // 이전 화면으로 돌아감
                         val intent=Intent(this@PostActivity, BoardActivity::class.java)
+                        intent.putExtra("subject", subjectArr.get(subjectCode.indexOf(postItem.subject)))
                         intent.putExtra("post", postItem)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
