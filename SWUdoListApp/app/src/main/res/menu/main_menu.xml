@@ -4,7 +4,7 @@
     <group android:id="@+id/menu_my_group">
         <item
             android:id="@+id/menu_my"
-            android:icon="@drawable/ic_baseline_person_24"
+            android:icon="@drawable/swutudent"
             android:title="menu_my"
             app:showAsAction="always">
             <menu>

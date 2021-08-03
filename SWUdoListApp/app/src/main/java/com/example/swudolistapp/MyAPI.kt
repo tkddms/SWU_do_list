@@ -66,4 +66,36 @@ import java.util.*
         @Query("subject") subject: String,
     ): Call<List<BoardData>>
 
+    @DELETE("/app_delete_post/")
+    fun deletePost(
+        @Query("author") author: String,
+        @Query("title") title: String,
+        @Query("subject") subject: String,
+    ): Call<PostItem>
+
+    @DELETE("/app_delete_comment")
+    fun deleteComment(
+        @Query("author") author: String,
+        @Query("title") title: String,
+        @Query("subject") subject: String,
+        @Query("context") context: String,
+        @Query("created") created: String,
+    ): Call<PostItem>
+
+    @GET("/app_get_comments/")
+    fun getComment(
+        @Query("author") author: String,
+        @Query("title") title: String,
+        @Query("subject") subject: String,
+    ): Call<List<CommentData>>
+
+    @FormUrlEncoded
+    @POST("/app_add_comment/")
+    fun addComment(
+        @Field("author") author: String,
+        @Field("content") context: String,
+        @Field("post") post: String,
+        @Field("subject") subject: String,
+    ): Call<EditItem>
+
 }

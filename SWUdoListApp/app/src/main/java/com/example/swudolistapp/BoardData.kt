@@ -22,3 +22,9 @@ data class BoardData(
     val context: String,
     val created: String,
 ): Parcelable
+
+data class CommentData(
+    val author: String,
+    val context: String,
+    var created: String,
+)

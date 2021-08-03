@@ -1,3 +1,4 @@
+import datetime
 import json
 import re
 from django.contrib import auth
@@ -10,7 +11,7 @@ from django.http import JsonResponse, HttpResponse, QueryDict
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from .models import sdiUser, ToDoList, Post
+from .models import sdiUser, ToDoList, Post, Comment
 from .serializers import UserSerializer, UserSubjectSerializer
 from collections import OrderedDict
 
@@ -176,7 +177,6 @@ def app_edit_post(request):
         context = request.POST.get("context")
         subject = request.POST.get("subject")
         created = timezone.localtime()
-        print("subject - " + subject + " context - " + context + " title - " + title + " author - " + author + " create - " + str(created) )
 
         try:
             post = Post(author=sdiUser.objects.get(user=User.objects.get(username=author)), subject=subject, title=title, context=context, created=created)
@@ -190,6 +190,7 @@ def app_edit_post(request):
         except:
             return JsonResponse({'created': 'fail'}, status=200)
 
+@csrf_exempt
 def app_get_posts(request):
     query = str(request).split("=")[1]
     subject_code = query.split("'")[0]
@@ -204,6 +205,89 @@ def app_get_posts(request):
             'subject': list.subject,
             'title': list.title,
             'context': list.context,
+            'created': list.created.strftime("%Y-%m-%d %H:%M:%S")
+        }
+        new_list.append(file_data)
+
+    return JsonResponse(new_list, safe=False, status=200)
+
+@csrf_exempt
+def app_delete_post(request):
+    query = str(request).split("=")
+
+    author = query[1].split('&')[0]
+    title = query[2].split('&')[0]
+    subject = query[3].split("'")[0]
+
+    delete_post = Post.objects.get(author=sdiUser.objects.get(user=User.objects.get(username=author)), title=title, subject=subject)
+
+    delete_post.delete()
+
+    return JsonResponse({'code': '1001', 'msg': 'success'}, status=200)
+
+@csrf_exempt
+def app_delete_comment(request):
+    query = str(request).split("=")
+
+    for q in query:
+        print(q, query.index(q))
+
+    author = query[1].split('&')[0]
+    title = query[2].split('&')[0]
+    subject = query[3].split("&")[0]
+    context = query[4].split("&")[0]
+    created = query[5].split("'")[0]
+
+    print(author, title, subject, context)
+
+    post = Post.objects.get(author=sdiUser.objects.get(user=User.objects.get(username=author)), title=title, subject=subject)
+
+    delete_comment = Comment.objects.get(post=post, content=context)
+
+    delete_comment.delete()
+
+    return JsonResponse({'code': '1001', 'msg': 'success'}, status=200)
+
+
+@csrf_exempt
+def app_add_comment(request):
+    if request.method == 'POST':
+        author = request.POST.get('author')
+        context = request.POST.get('content')
+        created = timezone.localtime()
+
+        post_title = request.POST.get('post')
+        subject = request.POST.get('subject')
+        try:
+            post = Post.objects.get(author=sdiUser.objects.get(user=User.objects.get(username=author)),
+                                           title=post_title, subject=subject)
+            comment = Comment(post=post, content=context, created=created)
+            comment.save()
+
+            strCreated = created.strftime("%Y-%m-%d %H:%M:%S")
+            print(strCreated)
+
+            return JsonResponse({'created': strCreated}, status=200)
+        except:
+            return JsonResponse({'created': 'fail'}, status=200)
+
+def app_get_comments(request):
+    query = str(request).split("=")
+
+    author = query[1].split('&')[0]
+    title = query[2].split('&')[0]
+    subject = query[3].split("'")[0]
+
+    post = Post.objects.get(author=sdiUser.objects.get(user=User.objects.get(username=author)), title=title, subject=subject)
+
+    lists = Comment.objects.filter(post=post)
+
+    new_list = []
+
+    for list in lists:
+        file_data = {
+            'author': post.author.user.username,
+            'context': list.content,
             'created': list.created.strftime("%Y-%m-%d %H:%M:%S")
         }
         new_list.append(file_data)

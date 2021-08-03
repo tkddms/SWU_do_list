@@ -44,22 +44,32 @@ class BoardActivity : AppCompatActivity() {
         if (intent.hasExtra("subject")) {
             // 해당 게시글 과목코드 얻기
             subjectCode = subjectCodeArr.get(subjectArr.indexOf(intent.getStringExtra("subject")))
-        } else {
-            Toast.makeText(applicationContext, "error", Toast.LENGTH_SHORT).show()
         }
 
+        if (intent.hasExtra("post")){
+            var post = intent.getParcelableExtra<BoardData>("post")
+            Log.e("delete", post.title)
+            boardDataList.remove(post)
+        }
+
+        // 게시글
         addBoardService.getPost(subjectCode).enqueue(object : Callback<List<BoardData>>{
             override fun onResponse(
                 call: Call<List<BoardData>>,
                 response: Response<List<BoardData>>
             ) {
                 var datas = response.body()
+                boardDataList.clear()
                 if (datas != null) {
                     for (data in datas){
                         boardDataList.add(0, BoardData(data.author, data.subject, data.title, data.context, data.created))
                     }
+                    setBoardListView()
+                    for (d in boardDataList){
+                        Log.e("boardData", d.toString())
+                    }
                 }
-                setBoardListView()
+
             }
 
             override fun onFailure(call: Call<List<BoardData>>, t: Throwable) {

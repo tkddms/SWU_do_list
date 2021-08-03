@@ -3,22 +3,16 @@ package com.example.swudolistapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_select_subject.*
 import kotlinx.android.synthetic.main.activity_to_do_list.*
-import kotlinx.android.synthetic.main.to_do_list_dialog_item.*
-import kotlinx.android.synthetic.main.to_do_list_rv_item.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.reflect.typeOf
 
 // ToDoList 액티비티
 class ToDoListActivity : AppCompatActivity() {
@@ -97,9 +91,6 @@ class ToDoListActivity : AppCompatActivity() {
                             Log.d("ADD-LIST", "msg: " + register?.code)
 
                             todoList.add(ToDoListData(dialogText.text.toString(), false))
-                            for(list in todoList){
-                                Log.e("tdl", list.context)
-                            }
                             setToDoListView()
                         }
 
