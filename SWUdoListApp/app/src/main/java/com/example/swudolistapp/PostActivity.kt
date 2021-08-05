@@ -89,10 +89,6 @@ class PostActivity : AppCompatActivity() {
                                 var res = response.body()
                                 commentList.remove(CommentData(item.author, item.context, item.created))
 
-                                for(list in commentList){
-                                    Log.e("commentList-removeComment", list.toString())
-                                }
-
                                 setCommentListView(mAdapter)
                             }
 
@@ -119,18 +115,12 @@ class PostActivity : AppCompatActivity() {
                 response: Response<List<CommentData>>
             ) {
                 var datas = response.body()
-                Log.e("datas", datas.toString())
                 if (datas != null) {
                     commentList.clear()
                     for (data in datas){
                         if(!commentList.contains(data)) {
-                            Log.e("user", sharedManager.getCurrentUser().id.toString())
-                            Log.e("author", data.author)
                             commentList.add(CommentData(data.author, data.context, data.created))
                         }
-                    }
-                    for (list in commentList){
-                        Log.e("commentList-getComment", list.toString())
                     }
                 }
                 setCommentListView(mAdapter)

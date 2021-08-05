@@ -1,10 +1,12 @@
 package com.example.swudolistapp
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,13 +46,12 @@ class LoginActivity : AppCompatActivity() {
             loginService.requestLogin(t_id, t_pw).enqueue(object : Callback<PostItem> {
                 override fun onFailure(call: Call<PostItem>, t: Throwable) {
 //                로그인 실패
-                    Log.e("Login", t.message)
+                    t.printStackTrace()
                 }
 
                 override fun onResponse(call: Call<PostItem>, response: Response<PostItem>) {
 //                로그인 성공
                     login = response.body()
-                    Log.e("Login", login?.code)
 
                     if(login?.code.equals("0000")){
                         // subject, email 내용 얻어오기
@@ -74,8 +75,16 @@ class LoginActivity : AppCompatActivity() {
                             }
                         })
 
-                        val intent = Intent(this@LoginActivity, SelectSubjectActivity::class.java)
-                        startActivity(intent)
+                        var builder = AlertDialog.Builder(this@LoginActivity)
+                        builder.setTitle("알아두세요!")
+                        builder.setMessage("해당 애플리케이션은 익명을 원칙으로 합니다.\n해당 게시판에서는 모두 '슈니'로 닉네임을 통일한다는 점 알려드립니다.")
+                        builder.setPositiveButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                            // 확인 해야 넘어갈 수 있음.
+                            val intent = Intent(this@LoginActivity, SelectSubjectActivity::class.java)
+                            startActivity(intent)
+                        }
+                        builder.show()
+
                     }
 
                     if (login?.code.equals("1001")) {

@@ -27,6 +27,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:minHeight="80dp"
+            android:paddingTop="4dp"
             android:paddingLeft="8dp"
             android:text="내용"
             android:textSize="18dp"
@@ -46,27 +47,14 @@
             app:srcCompat="@drawable/swutudent" />
 
         <TextView
-            android:id="@+id/tv_post_nickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
-            android:fontFamily="@font/nanumgothic"
-            android:text="슈니"
-            android:textSize="18dp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/iv_post_profile_image"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
             android:id="@+id/tv_post_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="36dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="44dp"
             android:fontFamily="@font/nanumgothic"
             android:text="2021-00-00 00:00:00"
-            app:layout_constraintStart_toEndOf="@+id/tv_post_nickname"
+            app:layout_constraintStart_toEndOf="@+id/iv_post_profile_image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -77,6 +65,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/nanumgothic"
+            android:paddingTop="8dp"
             android:paddingLeft="8dp"
             android:text="제목"
             android:textSize="20dp"

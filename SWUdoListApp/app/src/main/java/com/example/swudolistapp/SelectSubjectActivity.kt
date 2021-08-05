@@ -132,7 +132,6 @@ class SelectSubjectActivity : AppCompatActivity() {
             // 로그아웃
             R.id.menu_my_logout -> {
                 var id = sharedManager.getCurrentUser().id.toString()
-                Log.e("logout id" , id)
                 logoutService.requestLogout(id).enqueue(object : Callback<PostItem>{
                     override fun onFailure(call: Call<PostItem>, t: Throwable) {
                         t.printStackTrace()
@@ -179,10 +178,8 @@ class SelectSubjectActivity : AppCompatActivity() {
             .toList()
 
         for (item in str) {
-            Log.e("subjects", item)
             if (!selectItems.contains(item)) {
                 selectItems.add(item.toString())
-
             }
         }
     }

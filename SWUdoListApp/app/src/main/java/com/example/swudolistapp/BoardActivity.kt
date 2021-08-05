@@ -51,7 +51,6 @@ class BoardActivity : AppCompatActivity() {
 
         if (intent.hasExtra("post")){
             var post = intent.getParcelableExtra<BoardData>("post")
-            Log.e("delete", post.title)
             boardDataList.remove(post)
         }
 
@@ -68,9 +67,6 @@ class BoardActivity : AppCompatActivity() {
                         boardDataList.add(0, BoardData(data.author, data.subject, data.title, data.context, data.created))
                     }
                     setBoardListView()
-                    for (d in boardDataList){
-                        Log.e("boardData", d.toString())
-                    }
                 }
 
             }
@@ -91,9 +87,6 @@ class BoardActivity : AppCompatActivity() {
                     val dialogTitle = dialogView.findViewById<EditText>(R.id.board_et_title).text.toString()
                     val dialogContext = dialogView.findViewById<EditText>(R.id.board_et_context).text.toString()
                     val author = sharedManager.getCurrentUser().id.toString()
-
-                    Log.e("title", dialogTitle)
-                    Log.e("context", dialogContext)
 
                     addBoardService.editPost(author, dialogTitle, dialogContext, subjectCode).enqueue(object:
                         Callback<EditItem> {

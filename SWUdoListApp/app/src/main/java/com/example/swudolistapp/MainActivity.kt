@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity() {
                 ToDoListActivity.todoList.clear()
                 if (datas != null) {
                     for (data in datas){
-                        Log.e("post data", data.toString())
                         ToDoListActivity.todoList.add(ToDoListData(subjectCode, data.context, false))
                     }
                     setToDoListView()
@@ -85,9 +84,6 @@ class MainActivity : AppCompatActivity() {
                         BoardActivity.boardDataList.add(0, BoardData(data.author, data.subject, data.title, data.context, data.created))
                     }
                     setBoardListView()
-                    for (d in BoardActivity.boardDataList){
-                        Log.e("boardData", d.toString())
-                    }
                 }
 
             }
@@ -116,7 +112,6 @@ class MainActivity : AppCompatActivity() {
     // To-Do-List RV 구성
     fun setToDoListView(){
         val mAdapter = ToDoListAdapter(this, ToDoListActivity.todoList)
-        Log.e("todolist-setTodolistView", ToDoListActivity.todoList.toString())
         rv_main_todo.adapter = mAdapter
 
         val layout = LinearLayoutManager(this)

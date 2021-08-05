@@ -86,11 +86,6 @@ class ToDoListActivity : AppCompatActivity() {
                             call: Call<PostItem>,
                             response: Response<PostItem>
                         ) {
-                            var register = response.body()
-                            Log.d("ADD-LIST", "msg: " + register?.msg)
-                            Log.d("ADD-LIST", "msg: " + register?.code)
-                            Log.e("addtodolist", todoList.toString())
-
                             todoList.add(ToDoListData(subjectCode, dialogText.text.toString(), false))
                             setToDoListView()
                         }

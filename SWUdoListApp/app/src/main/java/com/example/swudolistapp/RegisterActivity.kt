@@ -67,7 +67,6 @@ class RegisterActivity : AppCompatActivity() {
                         print(item)
                         subjectStr += item + " "
                     }
-                    Log.e("subject List", subjectStr)
                 }
             }
 
@@ -107,10 +106,18 @@ class RegisterActivity : AppCompatActivity() {
                 sharedManager.saveCurrentUser(currentUser)
 
 
-                // 메인 화면으로 이동
-                val intent = Intent(this@RegisterActivity, SelectSubjectActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(intent)
+                var builder = AlertDialog.Builder(this@RegisterActivity)
+                builder.setTitle("알아두세요!")
+                builder.setMessage("해당 애플리케이션은 익명을 원칙으로 합니다.\n해당 게시판에서는 모두 '슈니'로 닉네임을 통일한다는 점 알려드립니다.")
+                builder.setPositiveButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                    // 확인 해야 넘어갈 수 있음.
+                    // 메인 화면으로 이동
+                    val intent = Intent(this@RegisterActivity, SelectSubjectActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+                }
+                builder.show()
+
             }
         }
     }
@@ -147,7 +154,6 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         if (subjectStr.equals("")){
-            Log.e("SELECT", subjectStr)
             btn_select_subject.setError("과목은 1개 이상 선택해야 합니다.")
             isOk = false
         }

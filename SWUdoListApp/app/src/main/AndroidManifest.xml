@@ -6,9 +6,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/swutudent"
+        android:label="SWUdoList"
+        android:roundIcon="@drawable/swutudent"
         android:supportsRtl="true"
         android:theme="@style/Theme.SWUdoListApp">
         <activity android:name=".SplashActivity"
@@ -21,8 +21,8 @@
         <activity android:name=".PostActivity" />
         <activity android:name=".BoardActivity" />
         <activity android:name=".ToDoListActivity" />
-        <activity android:name=".ListActivity" />
-        <activity android:name=".SelectSubjectActivity" />
+        <activity android:name=".SelectSubjectActivity"
+            android:theme="@style/SubjectList"/>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity"/>
         <activity android:name=".MainActivity" />
