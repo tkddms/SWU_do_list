@@ -73,6 +73,7 @@ def app_login(request):
             # status=400 으로 하면 안드로이드 상에서 배제해버려서 결과가 나오지 않음.
             return JsonResponse({'code': '1001', 'msg': 'login failed'}, status=200)
 
+# 회원가입
 @csrf_exempt
 def app_register(request):
     if request.method == 'POST':
@@ -104,6 +105,7 @@ def app_register(request):
             # status=400 으로 하면 안드로이드 상에서 배제해버려서 결과가 나오지 않음.
             return JsonResponse({'code': '1001', 'msg': 'signin failed'}, status=200)
 
+# 과목 업데이트
 @csrf_exempt
 def app_update_subject(request):
     if request.method == 'PUT':
@@ -119,6 +121,7 @@ def app_update_subject(request):
             # 해당 id의 User 객체를 불러오지 못했을 때
             return JsonResponse({'code': '1001', 'msg': 'not exist user'}, status=200)
 
+# 로그아웃
 @csrf_exempt
 def app_logout(request):
     auth.logout(request)
@@ -159,6 +162,7 @@ def app_add_toDoList(request):
         except:
             return JsonResponse({'code': '1001', 'msg': 'add fail'}, status=200)
 
+# 게시글 추가
 @csrf_exempt
 def app_edit_post(request):
 
@@ -180,6 +184,7 @@ def app_edit_post(request):
         except:
             return JsonResponse({'created': 'fail'}, status=200)
 
+# 게시글 얻어오기
 @csrf_exempt
 def app_get_posts(request):
     query = str(request).split("=")[1]
@@ -201,6 +206,7 @@ def app_get_posts(request):
 
     return JsonResponse(new_list, safe=False, status=200)
 
+# 게시글 삭제
 @csrf_exempt
 def app_delete_post(request):
     query = str(request).split("=")
@@ -215,6 +221,7 @@ def app_delete_post(request):
 
     return JsonResponse({'code': '1001', 'msg': 'success'}, status=200)
 
+# 댓글 삭제
 @csrf_exempt
 def app_delete_comment(request):
     query = str(request).split("=")
@@ -233,7 +240,7 @@ def app_delete_comment(request):
 
     return JsonResponse({'code': '1001', 'msg': 'success'}, status=200)
 
-
+# 댓글 추가
 @csrf_exempt
 def app_add_comment(request):
     if request.method == 'POST':
@@ -255,6 +262,7 @@ def app_add_comment(request):
         except:
             return JsonResponse({'created': 'fail'}, status=200)
 
+# 댓글 얻기
 def app_get_comments(request):
     query = str(request).split("=")
 
@@ -280,6 +288,7 @@ def app_get_comments(request):
 
     return JsonResponse(new_list, safe=False, status=200)
 
+# checked 정보 갱신
 def app_update_checked(request):
     if request.method == 'PUT':
         put = QueryDict(request.body)
