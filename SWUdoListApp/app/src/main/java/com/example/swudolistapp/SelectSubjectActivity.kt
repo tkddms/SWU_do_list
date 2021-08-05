@@ -213,6 +213,7 @@ class SelectSubjectActivity : AppCompatActivity() {
         }
     }
 
+    // 과목 List를 RV에 적용
     fun setSubjectListView(){
         val mAdapter = SubjectListAdapter(this, subjectList)
         rv_select_sub.adapter = mAdapter

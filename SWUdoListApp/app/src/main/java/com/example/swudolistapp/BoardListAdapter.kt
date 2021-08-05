@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+// BoardListAdapter - 게시글
 class BoardListAdapter(private val context: Context, private val dataList: ArrayList<BoardData>):
     RecyclerView.Adapter<BoardListAdapter.ViewHolder>() {
 
@@ -23,6 +24,7 @@ class BoardListAdapter(private val context: Context, private val dataList: Array
             tv_created.text = boardData.created
 
             itemView.setOnClickListener {
+                // 해당 itemView 클릭 시 boardData까지 함께 전송
                 Intent(context, PostActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     putExtra("post", boardData)

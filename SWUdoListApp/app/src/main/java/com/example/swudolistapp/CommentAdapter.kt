@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 
+// CommentAdapter - 댓글
 class CommentAdapter(private val context: Context, private val dataList: ArrayList<CommentData>):
     RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
 

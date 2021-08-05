@@ -49,6 +49,7 @@ class PostActivity : AppCompatActivity() {
         var getCommentService: MyAPI = retrofit.create(MyAPI::class.java)
         var deleteCommentService: MyAPI = retrofit.create(MyAPI::class.java)
 
+        // putExtra로 보낸 값 얻어오기
         if(intent.hasExtra("post")){
             postItem = intent.getParcelableExtra<BoardData>("post")
 
@@ -63,6 +64,7 @@ class PostActivity : AppCompatActivity() {
             }
         }
 
+        // 각 Item에 onClick method 적용
         val mAdapter = CommentAdapter(this, commentList)
         mAdapter.setItemClickListener(object : CommentAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
@@ -192,6 +194,7 @@ class PostActivity : AppCompatActivity() {
 
     }
 
+    // 댓글 리스트 RV 적용
     fun setCommentListView(mAdapter: CommentAdapter){
         rv_comment.adapter = mAdapter
 

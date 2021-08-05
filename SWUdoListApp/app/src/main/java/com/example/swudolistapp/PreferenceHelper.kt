@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import java.lang.UnsupportedOperationException
 
+// Preference Helper - SharedPreference
 object PreferenceHelper {
     fun defultPrefs(context: Context): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 

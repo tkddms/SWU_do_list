@@ -123,6 +123,7 @@ class BoardActivity : AppCompatActivity() {
         }
     }
 
+    // 뒤로가기 눌렀을 때
     override fun onBackPressed() {
         super.onBackPressed()
         val intent = Intent(this@BoardActivity, MainActivity::class.java )
@@ -131,6 +132,7 @@ class BoardActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    // BoardActivity의 RV 생성
     fun setBoardListView(){
         val mAdapter = BoardListAdapter(this, boardDataList)
         rv_board.adapter = mAdapter

@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 
+// To-Do-List Adapter
 class ToDoListAdapter(private val context: Context, private val dataList: ArrayList<ToDoListData>):
     RecyclerView.Adapter<ToDoListAdapter.ViewHolder>() {
-
-    private var ck = 0
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         private val tdlCheckBox = view.findViewById<CheckBox>(R.id.tdl_cb_rv)

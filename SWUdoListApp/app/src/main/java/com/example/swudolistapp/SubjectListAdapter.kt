@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+// SubjectListAdapter
 class SubjectListAdapter(private val context: Context, private val dataList: ArrayList<SubjectListData>):
     RecyclerView.Adapter<SubjectListAdapter.ViewHolder>() {
 

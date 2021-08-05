@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity() {
         
     }
 
+    // To-Do-List RV 구성
     fun setToDoListView(){
         val mAdapter = ToDoListAdapter(this, ToDoListActivity.todoList)
         Log.e("todolist-setTodolistView", ToDoListActivity.todoList.toString())
@@ -123,6 +124,7 @@ class MainActivity : AppCompatActivity() {
         rv_main_todo.setHasFixedSize(true)
     }
 
+    // 게시글 RV 구성
     fun setBoardListView(){
         val mAdapter = BoardListAdapter(this, BoardActivity.boardDataList)
         rv_main_board.adapter = mAdapter
