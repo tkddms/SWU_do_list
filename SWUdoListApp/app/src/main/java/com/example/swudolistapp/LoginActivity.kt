@@ -46,6 +46,7 @@ class LoginActivity : AppCompatActivity() {
             loginService.requestLogin(t_id, t_pw).enqueue(object : Callback<PostItem> {
                 override fun onFailure(call: Call<PostItem>, t: Throwable) {
 //                로그인 실패
+                    Toast.makeText(applicationContext, "서버와의 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show()
                     t.printStackTrace()
                 }
 
